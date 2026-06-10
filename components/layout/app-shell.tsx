@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import type { WorldCupData } from "@/types/world-cup";
 import { basePath } from "@/lib/base-path";
+import { LocalTime } from "@/components/ui/primitives";
 
 const NAV = [
   { id: "/overview", label: "Overview", icon: Grid3X3 },
@@ -105,7 +106,7 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
           </div>
           <div className="flex items-center gap-2 bg-[rgba(var(--good-rgb),0.12)] border border-[rgba(var(--good-rgb),0.28)] text-[var(--good)] rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--good)]" />
-            Updated {data.meta.lastUpdate}
+            Updated <LocalTime iso={data.meta.lastUpdateAt} fallback={data.meta.lastUpdate} />
             <span className="text-[var(--text-dim)] font-semibold">· next {data.meta.nextRefresh}</span>
           </div>
           <button onClick={handleRefresh} className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--line)] rounded-xl px-3.5 py-2 text-[13px] font-semibold hover:bg-[var(--surface-2)]">

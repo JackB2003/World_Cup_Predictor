@@ -72,6 +72,7 @@ async function main() {
         value: {
           ...value,
           lastUpdate: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          lastUpdateAt: new Date().toISOString(),
           matchesToday: targets.length,
         },
       });

@@ -5,6 +5,37 @@ import { ArrowDown, ArrowUp, ChevronRight, Minus } from "lucide-react";
 import type { FormResult, Team } from "@/types/world-cup";
 import { teamBarColor } from "@/lib/utils";
 
+export function LocalTime({
+  iso,
+  fallback = "",
+  withDate = false,
+}: {
+  iso?: string;
+  fallback?: string;
+  withDate?: boolean;
+}) {
+  const [label, setLabel] = useState(fallback);
+  useEffect(() => {
+    if (!iso) {
+      setLabel(fallback);
+      return;
+    }
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) {
+      setLabel(fallback);
+      return;
+    }
+    setLabel(
+      d.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+        ...(withDate ? { month: "short", day: "numeric" } : {}),
+      }),
+    );
+  }, [iso, fallback, withDate]);
+  return <span suppressHydrationWarning>{label || fallback}</span>;
+}
+
 export function Crest({ team, size = 36 }: { team?: Team; code?: string; size?: number }) {
   const t = team ?? { code: "???", color: "#444", txt: "#fff" } as Team;
   return (
