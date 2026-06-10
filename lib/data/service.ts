@@ -127,7 +127,10 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
     const meta: Meta = (metaRaw[0]?.value as Meta) ?? SEED_DATA.meta;
     const modelWeights: ModelWeight[] = (weightsRaw[0]?.value as ModelWeight[]) ?? SEED_DATA.modelWeights;
 
-    const todayMatches = matches.filter((m) => m.kickoffAt && (isToday(m.kickoffAt) || isTomorrowDate(m.kickoffAt)));
+    // Use a 36-hour window to handle US timezone offsets (matches stored in UTC may
+    // fall on the next calendar day UTC but still be "today" or "tomorrow" locally).
+    const windowEnd = new Date(Date.now() + 36 * 3600 * 1000);
+    const todayMatches = matches.filter((m) => m.kickoffAt && new Date(m.kickoffAt) >= new Date(Date.now() - 3 * 3600 * 1000) && new Date(m.kickoffAt) <= windowEnd);
 
     return {
       teams,
