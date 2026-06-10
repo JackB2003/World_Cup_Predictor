@@ -101,7 +101,8 @@ async function main() {
   }
 
   await clearCollection(pb, COLLECTIONS.news);
-  for (const n of SEED_DATA.news) {
+  // Injury/suspension rows come from API-Football on refresh — seed only display news.
+  for (const n of SEED_DATA.news.filter((item) => item.type !== "injury" && item.type !== "suspension")) {
     await pb.collection(COLLECTIONS.news).create({
       type: n.type,
       sev: n.sev,
