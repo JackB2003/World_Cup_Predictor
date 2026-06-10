@@ -168,4 +168,8 @@ export const apiFootball = {
     apiFootballFetch({ endpoint: "/predictions", params, ttlHours: 2 }),
   leagues: (params: Record<string, string | number>) =>
     apiFootballFetch({ endpoint: "/leagues", params, ttlHours: 168 }),
+  odds: (params: Record<string, string | number>) =>
+    apiFootballFetch({ endpoint: "/odds", params, ttlHours: 6 }),
+  squads: (params: Record<string, string | number>) =>
+    apiFootballFetch({ endpoint: "/players/squads", params, ttlHours: 24 }),
 };

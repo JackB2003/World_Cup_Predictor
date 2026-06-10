@@ -14,4 +14,8 @@ export const COLLECTIONS = {
   scorers: "scorers",
   meta: "meta",
   tournamentPredictions: "tournament_predictions",
+  matchOdds: "match_odds",
+  teamTournamentStats: "team_tournament_stats",
+  h2h: "h2h",
+  teamSquads: "team_squads",
 } as const;

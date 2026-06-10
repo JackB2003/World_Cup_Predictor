@@ -230,6 +230,42 @@ async function main() {
     { name: "createdAt", type: "date" },
   ]);
 
+  await ensureCollection(pb, "match_odds", [
+    { name: "fixtureId", type: "text", required: true },
+    { name: "matchId", type: "text" },
+    { name: "oddsHome", type: "number" },
+    { name: "oddsDraw", type: "number" },
+    { name: "oddsAway", type: "number" },
+    { name: "fetchedAt", type: "date" },
+  ]);
+
+  await ensureCollection(pb, "team_tournament_stats", [
+    { name: "teamCode", type: "text", required: true },
+    { name: "xgPerGame", type: "number" },
+    { name: "gfPerGame", type: "number" },
+    { name: "gaPerGame", type: "number" },
+    { name: "gamesPlayed", type: "number" },
+    { name: "lastUpdated", type: "date" },
+  ]);
+
+  await ensureCollection(pb, "h2h", [
+    { name: "homeCode", type: "text", required: true },
+    { name: "awayCode", type: "text", required: true },
+    { name: "homeWins", type: "number" },
+    { name: "draws", type: "number" },
+    { name: "awayWins", type: "number" },
+    { name: "total", type: "number" },
+    { name: "fetchedAt", type: "date" },
+  ]);
+
+  await ensureCollection(pb, "team_squads", [
+    { name: "teamCode", type: "text", required: true },
+    { name: "squadSize", type: "number" },
+    { name: "outfieldPlayers", type: "number" },
+    { name: "depthScore", type: "number" },
+    { name: "fetchedAt", type: "date" },
+  ]);
+
   console.log("Done.");
 }
 

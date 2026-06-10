@@ -46,3 +46,36 @@ export type ApiListResponse<T> = {
   results?: number;
   errors?: unknown;
 };
+
+export type ApiOddsValue = { value: string; odd: string };
+export type ApiOddsBet = { id: number; name: string; values: ApiOddsValue[] };
+export type ApiOddsBookmaker = { id: number; name: string; bets: ApiOddsBet[] };
+export type ApiOddsItem = {
+  fixture: { id: number };
+  bookmakers: ApiOddsBookmaker[];
+};
+
+export type ApiFixtureStatistic = { type: string; value: string | number | null };
+export type ApiFixtureStatisticsBlock = {
+  team: ApiTeamRef;
+  statistics: ApiFixtureStatistic[];
+};
+
+export type ApiFixtureDetail = {
+  fixture: { id: number; date: string; status: { short: string } };
+  teams: { home: ApiTeamRef; away: ApiTeamRef };
+  goals: { home: number | null; away: number | null };
+  statistics?: ApiFixtureStatisticsBlock[];
+};
+
+export type ApiSquadPlayer = {
+  id: number;
+  name: string;
+  age: number | null;
+  number: number | null;
+  position: string | null;
+};
+export type ApiSquadItem = {
+  team: ApiTeamRef;
+  players: ApiSquadPlayer[];
+};
