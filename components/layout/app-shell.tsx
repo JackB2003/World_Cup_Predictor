@@ -6,6 +6,7 @@ import {
   Bell, Footprints, Grid3X3, RefreshCw, Search, Target, Trophy,
 } from "lucide-react";
 import type { WorldCupData } from "@/types/world-cup";
+import { basePath } from "@/lib/base-path";
 
 const NAV = [
   { id: "/overview", label: "Overview", icon: Grid3X3 },
@@ -32,7 +33,7 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
 
   async function handleRefresh() {
     try {
-      await fetch("/api/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirm: true }) });
+      await fetch(`${basePath}/api/refresh`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirm: true }) });
       window.location.reload();
     } catch {
       window.location.reload();

@@ -5,6 +5,7 @@ import { Bolt, ChevronRight, Flag, Trophy, Bell, Footprints } from "lucide-react
 import type { WorldCupData } from "@/types/world-cup";
 import { CardHead, Crest, ProbBar, TriBar, teamColor } from "@/components/ui/primitives";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 function Countdown({ to }: { to: string }) {
   const calc = () => {
@@ -37,6 +38,7 @@ function Countdown({ to }: { to: string }) {
 }
 
 export function OverviewView({ data }: { data: WorldCupData }) {
+  const router = useRouter();
   const teams = [...data.teams].sort((a, b) => b.titleProb - a.titleProb).slice(0, 5);
   const maxT = teams[0]?.titleProb ?? 1;
   const topMatch = data.matches.find((m) => m.tag === "High confidence") ?? data.matches[1] ?? data.matches[0];
@@ -75,7 +77,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
       </div>
 
       <div className="card p-5">
-        <CardHead icon={<Bolt size={17} />} tag="Highest-confidence pick" title="Lock of the Day" more="All matches" onMore={() => { window.location.href = "/picks"; }} />
+        <CardHead icon={<Bolt size={17} />} tag="Highest-confidence pick" title="Lock of the Day" more="All matches" onMore={() => router.push("/picks")} />
         <Link href="/picks">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2.5 mb-3.5">
             <div className="flex items-center gap-2"><Crest team={home} size={36} /><b className="text-sm">{home.name}</b></div>
@@ -92,7 +94,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
       </div>
 
       <div className="card p-5">
-        <CardHead icon={<Trophy size={17} />} tag="Championship odds" title="Title Race" more="Outlook" onMore={() => { window.location.href = "/outlook"; }} />
+        <CardHead icon={<Trophy size={17} />} tag="Championship odds" title="Title Race" more="Outlook" onMore={() => router.push("/outlook")} />
         <div className="flex flex-col gap-2.5">
           {teams.map((t, i) => (
             <div key={t.code} className="flex items-center gap-2.5">
@@ -106,7 +108,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
       </div>
 
       <div className="card p-5">
-        <CardHead icon={<Footprints size={17} />} tag="Golden Boot watch" title="Top Scorer Race" more="Watch" onMore={() => { window.location.href = "/scorer"; }} />
+        <CardHead icon={<Footprints size={17} />} tag="Golden Boot watch" title="Top Scorer Race" more="Watch" onMore={() => router.push("/scorer")} />
         <div className="flex flex-col gap-2.5">
           {sc.map((s, i) => {
             const t = data.teamMap[s.team];
@@ -124,7 +126,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
       </div>
 
       <div className="card p-5">
-        <CardHead icon={<Bell size={17} />} tag="Needs your attention" title="High-Impact Alerts" more="All news" onMore={() => { window.location.href = "/news"; }} />
+        <CardHead icon={<Bell size={17} />} tag="Needs your attention" title="High-Impact Alerts" more="All news" onMore={() => router.push("/news")} />
         <div className="flex flex-col gap-2.5">
           {alerts.map((n, i) => (
             <div key={i} className="flex gap-2.5 items-start p-2.5 rounded-[11px] bg-[var(--surface-2)]">
