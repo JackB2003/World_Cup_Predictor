@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { ELO_CODE_TO_TEAM } from "@/lib/elo-ratings/codes";
 
-export const ELO_RATINGS_TSV_URL = "https://www.eloratings.net/World.tsv";
+const ELO_RATINGS_TSV_URL = "https://www.eloratings.net/World.tsv";
 
 /** Parsed ratings keyed by our FIFA team code (e.g. ARG → 2115). */
 export type EloRatingsByTeam = Record<string, number>;

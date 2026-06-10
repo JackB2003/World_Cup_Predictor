@@ -1,40 +1,6 @@
 import { poissonMatchPrediction } from "@/features/predictions/score-model";
+import { WC2026_GROUP_MAP } from "@/lib/api-football/wc2026-groups";
 import type { Team } from "@/types/world-cup";
-
-// Real 2026 WC group assignments derived from API-Football standings (by apiTeamId).
-// Notes on code mismatches due to import artifacts:
-//   AUT (apiId=1108) = Scotland in the real draw (Group C)
-//   SUI (apiId=20)   = Australia in the real draw (Group D)
-//   ALG (apiId=28)   = Tunisia in the real draw   (Group F)
-//   TUN (apiId=1532) = Algeria in the real draw   (Group J)
-//   SEN and PAN manually assigned to their real groups.
-//   Groups B and J have 3 teams (4th not resolvable from PB data).
-const GROUP_MAP: Record<string, string> = {
-  // Group A
-  MEX: "A", RSA: "A", KOR: "A", CZE: "A",
-  // Group B (3 teams — Switzerland not in PB with correct apiId)
-  CAN: "B", BIH: "B", QAT: "B",
-  // Group C
-  BRA: "C", MAR: "C", HAI: "C", AUT: "C",
-  // Group D
-  USA: "D", PAR: "D", SUI: "D", TUR: "D",
-  // Group E
-  GER: "E", CUW: "E", CIV: "E", ECU: "E",
-  // Group F
-  NED: "F", JPN: "F", SWE: "F", ALG: "F",
-  // Group G
-  BEL: "G", EGY: "G", IRN: "G", NZL: "G",
-  // Group H
-  ESP: "H", CPV: "H", KSA: "H", URU: "H",
-  // Group I
-  FRA: "I", IRQ: "I", NOR: "I", SEN: "I",
-  // Group J (3 teams — Austria/id=775 not in PB under correct code)
-  ARG: "J", TUN: "J", JOR: "J",
-  // Group K
-  POR: "K", COD: "K", UZB: "K", COL: "K",
-  // Group L
-  ENG: "L", CRO: "L", GHA: "L", PAN: "L",
-};
 
 export type SimulationResult = {
   teamCode: string;
@@ -186,7 +152,7 @@ export function runMonteCarlo(teams: Team[], simRuns = 10000): MonteCarloOutput 
   teams.forEach((t) => { stats[t.code] = { titles: 0, top4: 0, advance: 0, finishSum: 0 }; });
 
   // Override group assignments with the real 2026 WC draw
-  const teamsWithGroups = teams.map((t) => ({ ...t, group: GROUP_MAP[t.code] ?? "" }));
+  const teamsWithGroups = teams.map((t) => ({ ...t, group: WC2026_GROUP_MAP[t.code] ?? "" }));
 
   // Partition teams into groups (skip teams not in the draw)
   const groupMap: Record<string, Team[]> = {};

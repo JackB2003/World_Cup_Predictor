@@ -39,7 +39,7 @@ function factorial(n: number): number {
   return result;
 }
 
-export function poissonPMF(k: number, lambda: number): number {
+function poissonPMF(k: number, lambda: number): number {
   if (k < 0) return 0;
   if (lambda <= 0) return k === 0 ? 1 : 0;
   return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
@@ -74,7 +74,7 @@ function restPenalty(restDays?: number): number {
   return 0.88; // 2 days or less
 }
 
-export function expectedLambda(
+function expectedLambda(
   attacker: Team,
   defender: Team,
   isHome: boolean,

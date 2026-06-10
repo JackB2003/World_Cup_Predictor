@@ -1,4 +1,6 @@
-export type DailyPickChoice = "home" | "draw" | "away";
+import type { DailyPickChoice } from "@/types/world-cup";
+
+export type { DailyPickChoice };
 
 export interface DailyPickRecord {
   matchId: string;

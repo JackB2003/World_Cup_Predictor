@@ -21,8 +21,3 @@ function chicagoDateStr(d: Date): string {
 export function isToday(dateIso: string): boolean {
   return chicagoDateStr(new Date(dateIso)) === chicagoDateStr(new Date());
 }
-
-export function isTomorrowDate(dateIso: string): boolean {
-  const tomorrow = new Date(Date.now() + 24 * 3600 * 1000);
-  return chicagoDateStr(new Date(dateIso)) === chicagoDateStr(tomorrow);
-}

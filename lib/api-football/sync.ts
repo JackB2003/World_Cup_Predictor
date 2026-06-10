@@ -27,6 +27,11 @@ async function loadPbTeamRefs(pb: Pb) {
   }));
 }
 
+async function loadPbTeams(pb: Pb) {
+  const refs = await loadPbTeamRefs(pb);
+  return refs.map((r) => r.team);
+}
+
 function formFromApiString(form: string | undefined): FormResult[] {
   if (!form) return [];
   return form
@@ -387,8 +392,7 @@ async function writeInjuryNews(
 
 /** League-wide injuries from API-Football → `news` (used by the prediction engine). */
 export async function syncInjuriesToNews(pb: Pb, leagueId: string, season: string): Promise<number> {
-  const refs = await loadPbTeamRefs(pb);
-  const pbTeams = refs.map((r) => r.team);
+  const pbTeams = await loadPbTeams(pb);
 
   const res = (await apiFootball.injuries({ league: leagueId, season })) as ApiListResponse<ApiInjuryItem[]>;
   await clearInjuryNews(pb);
@@ -397,8 +401,7 @@ export async function syncInjuriesToNews(pb: Pb, leagueId: string, season: strin
 
 /** Per-fixture injuries for today's matches (pre-match refresh). */
 export async function syncInjuriesForTodayFixtures(pb: Pb): Promise<number> {
-  const refs = await loadPbTeamRefs(pb);
-  const pbTeams = refs.map((r) => r.team);
+  const pbTeams = await loadPbTeams(pb);
   const matches = await pb.collection(COLLECTIONS.matches).getFullList();
   const todayMatches = matches.filter((m) => m.kickoffAt && isToday(m.kickoffAt) && m.apiFixtureId);
 
@@ -418,10 +421,6 @@ export async function syncInjuriesForTodayFixtures(pb: Pb): Promise<number> {
 
   await clearInjuryNews(pb);
   return writeInjuryNews(pb, items, pbTeams);
-}
-
-export async function syncTodayTeamCodes(pb: Pb): Promise<string[]> {
-  return syncUpcomingMatchTeamCodes(pb, 0);
 }
 
 /** Team codes for matches kicking off today through `daysAhead` days from now. */
@@ -456,8 +455,7 @@ type ApiLineupItem = {
 
 /** Sync official lineups for today's fixtures → news (announced ~1 hr before kickoff). */
 export async function syncLineupsToNews(pb: Pb): Promise<number> {
-  const refs = await loadPbTeamRefs(pb);
-  const pbTeams = refs.map((r) => r.team);
+  const pbTeams = await loadPbTeams(pb);
 
   const matches = await pb.collection(COLLECTIONS.matches).getFullList();
   const now = Date.now();
