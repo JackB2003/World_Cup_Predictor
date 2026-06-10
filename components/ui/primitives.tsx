@@ -112,6 +112,7 @@ export function CardHead({ icon, tag, title, more, onMore }: { icon?: React.Reac
 }
 
 export function Sparkline({ data, w = 120, h = 36, color = "var(--accent)" }: { data: number[]; w?: number; h?: number; color?: string }) {
+  if (!data || data.length < 2) return <svg width={w} height={h} className="block overflow-visible" />;
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
