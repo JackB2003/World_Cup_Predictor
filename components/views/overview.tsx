@@ -41,10 +41,10 @@ export function OverviewView({ data }: { data: WorldCupData }) {
   const router = useRouter();
   const teams = [...data.teams].sort((a, b) => b.titleProb - a.titleProb).slice(0, 5);
   const maxT = teams[0]?.titleProb ?? 1;
-  const topMatch = data.matches.find((m) => m.tag === "High confidence") ?? data.matches[1] ?? data.matches[0];
+  const topMatch = [...data.matches].sort((a, b) => b.conf - a.conf)[0];
   const sc = data.scorers.slice(0, 4);
   const maxS = Math.max(...sc.map((s) => s.prob), 1);
-  const alerts = data.news.filter((n) => n.sev === "high");
+  const alerts = data.news.filter((n) => n.sev === "high").slice(0, 5);
 
   if (!topMatch) return null;
   const home = data.teamMap[topMatch.home];
