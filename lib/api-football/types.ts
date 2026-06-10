@@ -1,4 +1,4 @@
-export type ApiTeamRef = { id: number; name: string; winner?: boolean | null };
+export type ApiTeamRef = { id: number; name: string; code?: string | null; winner?: boolean | null };
 
 export type ApiFixtureItem = {
   fixture: { id: number; date: string; status: { short: string } };

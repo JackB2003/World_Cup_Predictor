@@ -1,5 +1,6 @@
 import { apiFootball } from "@/lib/api-football/client";
 import { resolveTeamCode } from "@/lib/api-football/team-codes";
+import { WC2026_TEAMS } from "@/lib/api-football/wc2026-teams";
 import type {
   ApiFixtureItem,
   ApiInjuryItem,
@@ -122,30 +123,95 @@ export async function syncFixtures(pb: Pb, leagueId: string, season: string): Pr
   return count;
 }
 
+function defaultTeamRecord(wc: (typeof WC2026_TEAMS)[number]) {
+  return {
+    code: wc.code,
+    name: wc.name,
+    color: "#6b7280",
+    txt: "",
+    group: "",
+    elo: 1600,
+    fifa: 50,
+    titleProb: 0,
+    top4: 0,
+    advance: 0,
+    form: [] as string[],
+    gf: 0,
+    ga: 0,
+    xg: 1.2,
+    conf: "World Cup 2026 participant",
+    trend: 0,
+    host: wc.host ?? false,
+    apiTeamId: wc.apiTeamId,
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
+async function upsertTeamByCode(
+  pb: Pb,
+  code: string,
+  patch: Record<string, unknown>,
+  refs: Awaited<ReturnType<typeof loadPbTeamRefs>>,
+): Promise<"created" | "updated" | "skipped"> {
+  const existing = refs.find((r) => r.team.code === code);
+  if (existing) {
+    await pb.collection(COLLECTIONS.teams).update(existing.record.id, {
+      ...patch,
+      lastUpdated: new Date().toISOString(),
+    });
+    return "updated";
+  }
+
+  const wc = WC2026_TEAMS.find((t) => t.code === code);
+  if (!wc) return "skipped";
+
+  await pb.collection(COLLECTIONS.teams).create({
+    ...defaultTeamRecord(wc),
+    ...patch,
+    code,
+    lastUpdated: new Date().toISOString(),
+  });
+  return "created";
+}
+
+/** Links API team IDs and creates PocketBase records for any missing WC 2026 teams. */
 export async function syncTeamLinks(pb: Pb, leagueId: string, season: string): Promise<number> {
-  const refs = await loadPbTeamRefs(pb);
-  const pbTeams = refs.map((r) => r.team);
+  let refs = await loadPbTeamRefs(pb);
+  let pbTeams = refs.map((r) => r.team);
 
   const res = (await apiFootball.teams({ league: leagueId, season })) as ApiListResponse<
     Array<{ team: { id: number; name: string; code?: string | null; country: string } }>
   >;
 
-  let updated = 0;
+  let changed = 0;
   for (const item of res.response ?? []) {
     const code = resolveTeamCode(item.team, pbTeams);
-    if (!code) continue;
+    if (!code) {
+      console.warn(`  skip team link: unresolved ${item.team.name} (id ${item.team.id})`);
+      continue;
+    }
 
-    const existing = refs.find((r) => r.team.code === code);
-    if (!existing) continue;
-
-    await pb.collection(COLLECTIONS.teams).update(existing.record.id, {
+    const result = await upsertTeamByCode(pb, code, {
       apiTeamId: item.team.id,
       name: item.team.name,
-      lastUpdated: new Date().toISOString(),
-    });
-    updated++;
+    }, refs);
+
+    if (result !== "skipped") {
+      changed++;
+      refs = await loadPbTeamRefs(pb);
+      pbTeams = refs.map((r) => r.team);
+    }
   }
-  return updated;
+
+  for (const wc of WC2026_TEAMS) {
+    if (refs.some((r) => r.team.code === wc.code)) continue;
+    await pb.collection(COLLECTIONS.teams).create(defaultTeamRecord(wc));
+    changed++;
+    refs = await loadPbTeamRefs(pb);
+    pbTeams = refs.map((r) => r.team);
+  }
+
+  return changed;
 }
 
 export async function syncStandings(pb: Pb, leagueId: string, season: string): Promise<number> {
