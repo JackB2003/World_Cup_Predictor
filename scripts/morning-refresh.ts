@@ -17,7 +17,8 @@ async function main() {
     try {
       execSync("npm run import:api-football", { stdio: "inherit" });
       execSync("npm run import:team-data", { stdio: "inherit" });
-      recordsUpdated += 2;
+      execSync("npm run import:elo-ratings", { stdio: "inherit" });
+      recordsUpdated += 3;
     } catch (e) {
       errors += `import: ${e}; `;
     }

@@ -55,9 +55,9 @@ function formFromFixtures(teamApiId: number, fixtures: ApiFixtureItem[]): FormRe
   return results;
 }
 
-function estimateXg(gf: number, played: number, existingXg?: number): number {
-  if (existingXg && existingXg > 0) return existingXg;
-  const gpg = played > 0 ? gf / played : 1;
+function estimateXg(gf: number, played: number, fallback = 1.2): number {
+  if (played <= 0) return fallback;
+  const gpg = gf / played;
   return Math.round(Math.min(3.2, Math.max(0.7, gpg * 0.92)) * 10) / 10;
 }
 
@@ -265,7 +265,7 @@ export async function syncStandings(pb: Pb, leagueId: string, season: string): P
             group: groupLetter || team.group,
             gf,
             ga,
-            xg: estimateXg(gf, played, team.xg),
+            xg: estimateXg(gf, played, team.xg > 0 ? team.xg : 1.2),
             lastUpdated: new Date().toISOString(),
           });
         }
@@ -341,24 +341,30 @@ export async function syncTeamStatisticsForToday(
   return updated;
 }
 
-export async function syncInjuriesToNews(pb: Pb, leagueId: string, season: string): Promise<number> {
-  const refs = await loadPbTeamRefs(pb);
-  const pbTeams = refs.map((r) => r.team);
-
-  const res = (await apiFootball.injuries({ league: leagueId, season })) as ApiListResponse<ApiInjuryItem[]>;
-  const injuries = res.response ?? [];
-
+async function clearInjuryNews(pb: Pb): Promise<void> {
   const existingNews = await pb.collection(COLLECTIONS.news).getFullList();
   for (const n of existingNews) {
-    if (n.icon === API_NEWS_ICON) {
+    if (n.type === "injury" || n.type === "suspension") {
       await pb.collection(COLLECTIONS.news).delete(n.id);
     }
   }
+}
 
+async function writeInjuryNews(
+  pb: Pb,
+  items: ApiInjuryItem[],
+  pbTeams: ReturnType<typeof mapTeamRecord>[],
+): Promise<number> {
   let count = 0;
-  for (const item of injuries) {
+  const seen = new Set<string>();
+
+  for (const item of items) {
     const teamCode = resolveTeamCode(item.team, pbTeams);
     if (!teamCode) continue;
+
+    const key = `${teamCode}:${item.player.name}:${item.reason}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
 
     const sev = injurySeverity(item.reason, item.type);
     const isSuspension = /suspension|suspended|red card|ban/i.test(`${item.type} ${item.reason}`);
@@ -379,12 +385,59 @@ export async function syncInjuriesToNews(pb: Pb, leagueId: string, season: strin
   return count;
 }
 
+/** League-wide injuries from API-Football → `news` (used by the prediction engine). */
+export async function syncInjuriesToNews(pb: Pb, leagueId: string, season: string): Promise<number> {
+  const refs = await loadPbTeamRefs(pb);
+  const pbTeams = refs.map((r) => r.team);
+
+  const res = (await apiFootball.injuries({ league: leagueId, season })) as ApiListResponse<ApiInjuryItem[]>;
+  await clearInjuryNews(pb);
+  return writeInjuryNews(pb, res.response ?? [], pbTeams);
+}
+
+/** Per-fixture injuries for today's matches (pre-match refresh). */
+export async function syncInjuriesForTodayFixtures(pb: Pb): Promise<number> {
+  const refs = await loadPbTeamRefs(pb);
+  const pbTeams = refs.map((r) => r.team);
+  const matches = await pb.collection(COLLECTIONS.matches).getFullList();
+  const todayMatches = matches.filter((m) => m.kickoffAt && isToday(m.kickoffAt) && m.apiFixtureId);
+
+  if (!todayMatches.length) return 0;
+
+  const items: ApiInjuryItem[] = [];
+  for (const m of todayMatches) {
+    try {
+      const res = (await apiFootball.injuries({ fixture: m.apiFixtureId })) as ApiListResponse<ApiInjuryItem[]>;
+      items.push(...(res.response ?? []));
+    } catch (e) {
+      console.warn(`  injuries skipped for fixture ${m.apiFixtureId}:`, e);
+    }
+  }
+
+  if (!items.length) return 0;
+
+  await clearInjuryNews(pb);
+  return writeInjuryNews(pb, items, pbTeams);
+}
+
 export async function syncTodayTeamCodes(pb: Pb): Promise<string[]> {
+  return syncUpcomingMatchTeamCodes(pb, 0);
+}
+
+/** Team codes for matches kicking off today through `daysAhead` days from now. */
+export async function syncUpcomingMatchTeamCodes(pb: Pb, daysAhead = 1): Promise<string[]> {
   const matches = await pb.collection(COLLECTIONS.matches).getFullList();
   const codes = new Set<string>();
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const end = new Date(now);
+  end.setDate(end.getDate() + daysAhead + 1);
 
   for (const m of matches) {
-    if (!m.kickoffAt || !isToday(m.kickoffAt)) continue;
+    if (!m.kickoffAt) continue;
+    const kickoff = new Date(m.kickoffAt);
+    if (kickoff < now || kickoff >= end) continue;
+    if (m.status && FINISHED_STATUSES.has(m.status)) continue;
     if (m.homeCode) codes.add(m.homeCode);
     if (m.awayCode) codes.add(m.awayCode);
   }

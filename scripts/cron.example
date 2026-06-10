@@ -2,6 +2,7 @@
 # Adjust paths and timezone as needed.
 
 # Morning refresh — 6:00 AM daily
+# (fixtures → team stats → eloratings.net Elo → predictions)
 0 6 * * * cd /var/www/world-cup-predictor && /usr/bin/npm run refresh:morning >> /var/log/world-cup-refresh.log 2>&1
 
 # Pre-match refresh — 90 min before typical first kickoff (example: 11:30 AM)

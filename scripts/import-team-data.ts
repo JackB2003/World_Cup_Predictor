@@ -5,7 +5,7 @@ import {
   syncStandings,
   syncTeamLinks,
   syncTeamStatisticsForToday,
-  syncTodayTeamCodes,
+  syncUpcomingMatchTeamCodes,
 } from "@/lib/api-football/sync";
 
 async function main() {
@@ -24,9 +24,9 @@ async function main() {
   const form = await syncFormFromFixtures(pb, leagueId, season);
   console.log(`  Refreshed form for ${form} team(s)`);
 
-  const todayTeams = await syncTodayTeamCodes(pb);
-  const stats = await syncTeamStatisticsForToday(pb, leagueId, season, todayTeams);
-  console.log(`  Refreshed statistics for ${stats} team(s) playing today`);
+  const upcomingTeams = await syncUpcomingMatchTeamCodes(pb, 1);
+  const stats = await syncTeamStatisticsForToday(pb, leagueId, season, upcomingTeams);
+  console.log(`  Refreshed statistics for ${stats} team(s) with matches today/tomorrow`);
 
   const injuries = await syncInjuriesToNews(pb, leagueId, season);
   console.log(`  Imported ${injuries} injury/suspension alert(s) to news`);
