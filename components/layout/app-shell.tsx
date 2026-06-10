@@ -15,7 +15,7 @@ const NAV = [
   { id: "/outlook", label: "Tournament Outlook", icon: Trophy },
   { id: "/scorer", label: "Top Scorer Watch", icon: Target },
   { id: "/news", label: "News & Alerts", icon: Bell, badgeNews: true },
-  { id: "/tracker", label: "Pick Tracker", icon: Target },
+  { id: "/tracker", label: "Jack's Pick Tracker", icon: Target },
 ];
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
@@ -24,7 +24,7 @@ const PAGE_META: Record<string, { title: string; sub: string }> = {
   "/outlook": { title: "Tournament Outlook", sub: "Championship odds & projected finishers · 10,000 simulations" },
   "/scorer": { title: "Top Scorer Watch", sub: "Golden Boot projections & the scoring race" },
   "/news": { title: "News & Injury Alerts", sub: "Latest injury, suspension & roster intel that moves the model" },
-  "/tracker": { title: "Pick Tracker", sub: "Your selections, accuracy & points" },
+  "/tracker": { title: "Jack's Pick Tracker", sub: "Your picks vs what actually happened" },
 };
 
 export function AppShell({ data, children }: { data: WorldCupData; children: React.ReactNode }) {

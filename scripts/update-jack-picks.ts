@@ -1,0 +1,44 @@
+/**
+ * Sync Jack's locked one-time tournament picks into PocketBase.
+ * Run on the VPS: npm run picks:sync-jack
+ */
+import { ensureAdminAuth } from "@/lib/pocketbase/admin";
+import { COLLECTIONS } from "@/lib/pocketbase/collections";
+import { SEED_DATA } from "@/lib/data/seed";
+
+async function main() {
+  const pb = await ensureAdminAuth();
+  const records = await pb.collection(COLLECTIONS.userPicks).getFullList({ sort: "id" });
+
+  const payload = {
+    top4: SEED_DATA.userPicks.top4,
+    topScorer: SEED_DATA.userPicks.topScorer,
+  };
+
+  if (records[0]) {
+    await pb.collection(COLLECTIONS.userPicks).update(records[0].id, payload);
+    console.log("Updated Jack's one-time picks in user_picks:");
+  } else {
+    await pb.collection(COLLECTIONS.userPicks).create({
+      ...payload,
+      points: 0,
+      rank: 0,
+      totalUsers: 1,
+      accuracy: 0,
+      streak: 0,
+      history: [],
+      accuracyTrend: [],
+    });
+    console.log("Created user_picks with Jack's one-time picks:");
+  }
+
+  for (const p of payload.top4) {
+    console.log(`  ${p.pos}. ${p.team} — ${p.note}`);
+  }
+  console.log(`  Top scorer: ${payload.topScorer.player} (${payload.topScorer.team})`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

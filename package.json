@@ -24,6 +24,7 @@
     "refresh:prediction-data": "tsx scripts/refresh-prediction-data.ts",
     "grade:picks": "tsx scripts/grade-picks.ts",
     "picks:verify": "tsx scripts/verify-daily-picks.ts",
+    "picks:sync-jack": "tsx scripts/update-jack-picks.ts",
     "test": "tsx --test features/predictions/match-engine.test.ts features/picks/daily-picks.test.ts",
     "fallow:audit": "fallow audit",
     "news:add": "tsx scripts/add-news.ts",
