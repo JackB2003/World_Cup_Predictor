@@ -6,8 +6,9 @@ PM2_APP_NAME="${PM2_APP_NAME:-world-cup-predictor}"
 
 cd "$APP_DIR"
 
-echo "==> Pulling latest code from main"
-git pull origin main
+echo "==> Syncing to latest main"
+git fetch origin main
+git reset --hard origin/main
 
 if [[ ! -f package.json ]]; then
   echo "==> No package.json yet — code updated, app start skipped until scaffolding is complete."
