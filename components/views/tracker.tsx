@@ -7,7 +7,6 @@ import type { DailyPick, WorldCupData } from "@/types/world-cup";
 import { CardHead, Crest, Sparkline } from "@/components/ui/primitives";
 import { fetchDailyPicks } from "@/lib/picks/client";
 import { isPickLocked } from "@/features/picks/daily-picks";
-import { basePath } from "@/lib/base-path";
 
 const STAT = {
   "on-track": { cls: "badge-good", t: "On track" },
@@ -112,7 +111,7 @@ export function TrackerView({ data }: { data: WorldCupData }) {
             </div>
             <div className="text-[var(--text-dim)] text-[12px]">
               Submit picks on{" "}
-              <Link href={`${basePath}/picks`} className="text-[var(--accent)] font-semibold hover:underline">
+              <Link href="/picks" className="text-[var(--accent)] font-semibold hover:underline">
                 Today&apos;s Picks
               </Link>{" "}
               before kickoff. Unset picks stay blank.
