@@ -10,6 +10,13 @@ import { isToday } from "@/lib/utils";
 
 const FINISHED = new Set(["FT", "AET", "PEN"]);
 
+function isTomorrow(dateIso: string): boolean {
+  const d = new Date(dateIso);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return d.getFullYear() === tomorrow.getFullYear() && d.getMonth() === tomorrow.getMonth() && d.getDate() === tomorrow.getDate();
+}
+
 type PbRecord = Record<string, unknown>;
 
 function num(v: unknown): number | undefined {
@@ -80,8 +87,15 @@ async function main() {
     for (const h of h2hRaw) h2hByPair.set(`${h.homeCode}|${h.awayCode}`, h);
 
     const now = new Date();
-    const todayMatches = matchesRaw.filter((m) => m.kickoffAt && isToday(m.kickoffAt));
-    const targets = todayMatches.length ? todayMatches : matchesRaw.slice(0, 5);
+    const upcomingMatches = matchesRaw
+      .filter((m) => m.kickoffAt && (isToday(m.kickoffAt as string) || isTomorrow(m.kickoffAt as string)))
+      .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime());
+    const targets = upcomingMatches.length
+      ? upcomingMatches
+      : matchesRaw
+          .filter((m) => m.kickoffAt && new Date(m.kickoffAt as string) > new Date())
+          .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime())
+          .slice(0, 5);
 
     for (const m of targets) {
       const home = teamMap[m.homeCode];
