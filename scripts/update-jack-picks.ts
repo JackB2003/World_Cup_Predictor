@@ -13,29 +13,28 @@ async function main() {
   const payload = {
     top4: SEED_DATA.userPicks.top4,
     topScorer: SEED_DATA.userPicks.topScorer,
+    points: 0,
+    rank: 0,
+    totalUsers: 1,
+    accuracy: 0,
+    streak: 0,
+    history: [],
+    accuracyTrend: [],
   };
 
   if (records[0]) {
     await pb.collection(COLLECTIONS.userPicks).update(records[0].id, payload);
-    console.log("Updated Jack's one-time picks in user_picks:");
+    console.log("Updated Jack's picks and reset pre-tournament stats:");
   } else {
-    await pb.collection(COLLECTIONS.userPicks).create({
-      ...payload,
-      points: 0,
-      rank: 0,
-      totalUsers: 1,
-      accuracy: 0,
-      streak: 0,
-      history: [],
-      accuracyTrend: [],
-    });
-    console.log("Created user_picks with Jack's one-time picks:");
+    await pb.collection(COLLECTIONS.userPicks).create(payload);
+    console.log("Created user_picks with Jack's picks:");
   }
 
   for (const p of payload.top4) {
     console.log(`  ${p.pos}. ${p.team} — ${p.note}`);
   }
   console.log(`  Top scorer: ${payload.topScorer.player} (${payload.topScorer.team})`);
+  console.log("  Stats reset: points=0, accuracy=0, streak=0, history=[], accuracyTrend=[]");
 }
 
 main().catch((e) => {
