@@ -5,9 +5,12 @@
 import { execSync } from "child_process";
 
 async function main() {
-  console.log("Refreshing prediction data (fixtures → teams → Elo → injuries → picks)...");
+  console.log("Refreshing prediction data (fixtures → stats → H2H → odds → teams → Elo → picks)...");
 
   execSync("npm run import:api-football", { stdio: "inherit" });
+  execSync("npm run import:fixture-stats", { stdio: "inherit" });
+  execSync("npm run import:h2h", { stdio: "inherit" });
+  execSync("npm run import:odds", { stdio: "inherit" });
   execSync("npm run import:team-data", { stdio: "inherit" });
   execSync("npm run import:elo-ratings", { stdio: "inherit" });
   execSync("npm run predict:today", { stdio: "inherit" });
