@@ -32,6 +32,30 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
     const teamMap: Record<string, Team> = {};
     teams.forEach((t) => { teamMap[t.code] = t; });
 
+    for (const m of matchesRaw) {
+      for (const code of [m.homeCode, m.awayCode]) {
+        if (code && !teamMap[code]) {
+          teamMap[code] = {
+            code,
+            name: code,
+            color: "#6b7280",
+            elo: 1500,
+            fifa: 0,
+            group: "",
+            titleProb: 0,
+            top4: 0,
+            advance: 0,
+            form: [],
+            gf: 0,
+            ga: 0,
+            xg: 0,
+            conf: "—",
+            trend: 0,
+          };
+        }
+      }
+    }
+
     const predMap = new Map(predictionsRaw.map((p) => [p.matchId, p]));
 
     const matches: Match[] = matchesRaw.map((m) => {
