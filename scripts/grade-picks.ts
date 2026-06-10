@@ -9,7 +9,7 @@ async function main() {
 
   const [dailyPicks, userPicks, matches, predictions, existingHistory] = await Promise.all([
     pb.collection(COLLECTIONS.userDailyPicks).getFullList({ filter: "graded != true" }),
-    pb.collection(COLLECTIONS.userPicks).getFullList(),
+    pb.collection(COLLECTIONS.userPicks).getFullList({ sort: "id" }),
     pb.collection(COLLECTIONS.matches).getFullList(),
     pb.collection(COLLECTIONS.predictions).getFullList(),
     pb.collection(COLLECTIONS.predictionHistory).getFullList(),
