@@ -1,0 +1,43 @@
+{
+  "name": "world-cup-predictor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "tsx scripts/seed-pocketbase.ts",
+    "setup:pb": "tsx scripts/setup-pocketbase.ts",
+    "predict:top4": "tsx scripts/predict-top4.ts",
+    "predict:scorer": "tsx scripts/predict-scorer.ts",
+    "predict:today": "tsx scripts/predict-today.ts",
+    "refresh:morning": "tsx scripts/morning-refresh.ts",
+    "refresh:prematch": "tsx scripts/prematch-refresh.ts",
+    "import:api-football": "tsx scripts/import-api-football.ts",
+    "grade:picks": "tsx scripts/grade-picks.ts",
+    "fallow:audit": "fallow audit"
+  },
+  "dependencies": {
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.3",
+    "openai": "^5.3.0",
+    "pocketbase": "^0.26.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^15.3.3",
+    "@tailwindcss/postcss": "^4.1.8",
+    "@types/node": "^22.15.29",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "eslint": "^9.28.0",
+    "fallow": "^2.91.0",
+    "tailwindcss": "^4.1.8",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

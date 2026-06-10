@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "ignorePatterns": ["**/*.generated.ts", "design/**", "fixtures/**"],
+  "boundaries": {
+    "zones": [
+      { "name": "app", "patterns": ["app/**"] },
+      { "name": "components", "patterns": ["components/**"] },
+      { "name": "features", "patterns": ["features/**"] },
+      { "name": "lib", "patterns": ["lib/**"] },
+      { "name": "types", "patterns": ["types/**"] },
+      { "name": "scripts", "patterns": ["scripts/**"] }
+    ],
+    "rules": [
+      { "from": "app", "allow": ["components", "features", "lib", "types"] },
+      { "from": "components", "allow": ["lib", "types"] },
+      { "from": "features", "allow": ["lib", "types"] },
+      { "from": "scripts", "allow": ["features", "lib", "types"] }
+    ]
+  },
+  "rules": {
+    "unused-files": "warn",
+    "unused-exports": "warn",
+    "circular-dependencies": "warn"
+  }
+}

@@ -1,0 +1,17 @@
+export const COLLECTIONS = {
+  teams: "teams",
+  players: "players",
+  matches: "matches",
+  standings: "standings",
+  injuries: "injuries",
+  predictions: "predictions",
+  predictionHistory: "prediction_history",
+  apiRequestLogs: "api_request_logs",
+  dataRefreshLogs: "data_refresh_logs",
+  apiCache: "api_cache",
+  news: "news",
+  userPicks: "user_picks",
+  scorers: "scorers",
+  meta: "meta",
+  tournamentPredictions: "tournament_predictions",
+} as const;
