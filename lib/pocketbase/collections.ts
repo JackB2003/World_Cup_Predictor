@@ -11,6 +11,7 @@ export const COLLECTIONS = {
   apiCache: "api_cache",
   news: "news",
   userPicks: "user_picks",
+  userDailyPicks: "user_daily_picks",
   scorers: "scorers",
   meta: "meta",
   tournamentPredictions: "tournament_predictions",

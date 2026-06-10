@@ -142,6 +142,16 @@ async function main() {
     { name: "dataFreshness", type: "text" },
   ]);
 
+  await ensureCollection(pb, "user_daily_picks", [
+    { name: "matchId", type: "text", required: true },
+    { name: "choice", type: "text", required: true },
+    { name: "pickTeam", type: "text", required: true },
+    { name: "pickLabel", type: "text", required: true },
+    { name: "kickoffAt", type: "date", required: true },
+    { name: "submittedAt", type: "date", required: true },
+    { name: "graded", type: "bool" },
+  ]);
+
   await ensureCollection(pb, "prediction_history", [
     { name: "matchLabel", type: "text" },
     { name: "userPick", type: "text" },
