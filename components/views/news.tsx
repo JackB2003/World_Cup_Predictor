@@ -75,8 +75,8 @@ export function NewsView({ data }: { data: WorldCupData }) {
 
   return (
     <div className="fade-in grid gap-[18px]" style={{ gridTemplateColumns: "1fr 300px" }}>
-      <div className="grid gap-3.5">
-        <div className="segment">
+      <div className="grid gap-3.5 content-start">
+        <div className="segment self-start">
           <button className={filter === "all" ? "on" : ""} onClick={() => setFilter("all")}>
             All {counts.all > 0 && <span className="ml-1 opacity-60 text-[10px]">{counts.all}</span>}
           </button>
