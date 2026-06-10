@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": ["ecosystem.config.js", "lib/env-file.js"],
   "ignorePatterns": ["**/*.generated.ts", "design/**", "fixtures/**"],
   "boundaries": {
     "zones": [
@@ -12,7 +13,7 @@
     ],
     "rules": [
       { "from": "app", "allow": ["components", "features", "lib", "types"] },
-      { "from": "components", "allow": ["lib", "types"] },
+      { "from": "components", "allow": ["features", "lib", "types"] },
       { "from": "features", "allow": ["lib", "types"] },
       { "from": "scripts", "allow": ["features", "lib", "types"] }
     ]

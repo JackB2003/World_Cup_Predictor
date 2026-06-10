@@ -50,7 +50,7 @@ export async function getDailyPicks(matchIds?: string[]): Promise<DailyPickRecor
   return rows.map((r) => mapPickRow(r as unknown as PickRow));
 }
 
-export async function getMatchForPick(pb: Pb, matchId: string): Promise<MatchRow | null> {
+async function getMatchForPick(pb: Pb, matchId: string): Promise<MatchRow | null> {
   const rows = await pb.collection(COLLECTIONS.matches).getFullList({
     filter: `matchId = "${matchId}"`,
   });
