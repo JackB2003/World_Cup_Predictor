@@ -12,3 +12,10 @@ export function isToday(dateIso: string): boolean {
   const now = new Date();
   return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 }
+
+export function isTomorrowDate(dateIso: string): boolean {
+  const d = new Date(dateIso);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return d.getFullYear() === tomorrow.getFullYear() && d.getMonth() === tomorrow.getMonth() && d.getDate() === tomorrow.getDate();
+}

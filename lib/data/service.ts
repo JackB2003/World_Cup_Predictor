@@ -4,7 +4,7 @@ import { mapScorerRecord, mapTeamRecord } from "@/lib/pocketbase/mappers";
 import { SEED_DATA } from "@/lib/data/seed";
 import { predictMatch } from "@/features/predictions/match-engine";
 import type { WorldCupData, Match, Team, Scorer, NewsItem, UserPicks, Meta, ModelWeight } from "@/types/world-cup";
-import { formatKickoffTime, isToday } from "@/lib/utils";
+import { formatKickoffTime, isToday, isTomorrowDate } from "@/lib/utils";
 
 function useSeedFallback(): boolean {
   return process.env.USE_SEED_DATA === "true" || !process.env.POCKETBASE_URL;
@@ -127,12 +127,12 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
     const meta: Meta = (metaRaw[0]?.value as Meta) ?? SEED_DATA.meta;
     const modelWeights: ModelWeight[] = (weightsRaw[0]?.value as ModelWeight[]) ?? SEED_DATA.modelWeights;
 
-    const todayMatches = matches.filter((m) => m.kickoffAt && isToday(m.kickoffAt));
+    const todayMatches = matches.filter((m) => m.kickoffAt && (isToday(m.kickoffAt) || isTomorrowDate(m.kickoffAt)));
 
     return {
       teams,
       teamMap,
-      matches: todayMatches.length > 0 ? todayMatches : matches.slice(0, 5),
+      matches: todayMatches.length > 0 ? todayMatches : matches.filter((m) => m.kickoffAt && new Date(m.kickoffAt) > new Date()).slice(0, 5),
       scorers,
       news,
       userPicks,

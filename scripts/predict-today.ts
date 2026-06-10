@@ -87,15 +87,13 @@ async function main() {
     for (const h of h2hRaw) h2hByPair.set(`${h.homeCode}|${h.awayCode}`, h);
 
     const now = new Date();
-    const upcomingMatches = matchesRaw
-      .filter((m) => m.kickoffAt && (isToday(m.kickoffAt as string) || isTomorrow(m.kickoffAt as string)))
-      .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime());
-    const targets = upcomingMatches.length
-      ? upcomingMatches
-      : matchesRaw
-          .filter((m) => m.kickoffAt && new Date(m.kickoffAt as string) > new Date())
-          .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime())
-          .slice(0, 5);
+    // Always predict the next 5 upcoming matches (matches what the service displays).
+    // During matchdays this will be today+tomorrow; pre-tournament it covers
+    // the first upcoming fixture window so picks are never stale.
+    const targets = matchesRaw
+      .filter((m) => m.kickoffAt && new Date(m.kickoffAt as string) > new Date(now.getTime() - 3 * 3600 * 1000))
+      .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime())
+      .slice(0, 5);
 
     for (const m of targets) {
       const home = teamMap[m.homeCode];
