@@ -86,6 +86,18 @@ export interface UserTop4Pick {
   note: string;
 }
 
+export type DailyPickChoice = "home" | "draw" | "away";
+
+export interface DailyPick {
+  matchId: string;
+  choice: DailyPickChoice;
+  pickTeam: string;
+  pickLabel: string;
+  kickoffAt?: string;
+  submittedAt?: string;
+  locked: boolean;
+}
+
 export interface UserPicks {
   points: number;
   rank: number;

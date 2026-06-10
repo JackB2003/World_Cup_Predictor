@@ -91,10 +91,10 @@ const userPicks = {
   accuracy: 64,
   streak: 4,
   top4: [
-    { pos: 1, team: "ARG", status: "on-track" as const, note: "Top of Group A" },
-    { pos: 2, team: "FRA", status: "on-track" as const, note: "Leading Group F" },
-    { pos: 3, team: "ESP", status: "on-track" as const, note: "Top of Group E" },
-    { pos: 4, team: "ENG", status: "risk" as const, note: "Tight group, MD2 vs Morocco" },
+    { pos: 1, team: "ARG", status: "on-track" as const, note: "Jack's pick — reigning champions" },
+    { pos: 2, team: "ESP", status: "on-track" as const, note: "Jack's pick — best ball progression" },
+    { pos: 3, team: "FRA", status: "on-track" as const, note: "Jack's pick — elite transition attack" },
+    { pos: 4, team: "BRA", status: "on-track" as const, note: "Jack's pick — individual quality" },
   ],
   topScorer: { player: "Kylian Mbappé", team: "FRA", status: "leading" as const, note: "3 goals — joint top so far" },
   history: [

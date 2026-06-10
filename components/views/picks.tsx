@@ -1,16 +1,67 @@
 "use client";
 
-import { useState } from "react";
-import { Bolt, Check, ChevronRight, Clock, Info, RefreshCw } from "lucide-react";
-import type { Match, WorldCupData } from "@/types/world-cup";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Bolt, Check, ChevronRight, Clock, Info, RefreshCw, Target } from "lucide-react";
+import type { DailyPick, DailyPickChoice, Match, WorldCupData } from "@/types/world-cup";
 import { Crest, LocalTime, TriBar, teamColor } from "@/components/ui/primitives";
+import { fetchDailyPicks, saveDailyPick } from "@/lib/picks/client";
+import { isPickLocked } from "@/features/picks/daily-picks";
 
-function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupData; expanded: boolean; onToggle: () => void }) {
+function PickButton({
+  active,
+  disabled,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  disabled: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className={`px-3 py-1.5 rounded-lg text-[12px] font-bold border transition-colors ${
+        active
+          ? "bg-[var(--accent)] text-[#07090F] border-[var(--accent)]"
+          : disabled
+            ? "bg-[var(--surface-2)] text-[var(--text-dim)] border-[var(--line)] cursor-not-allowed opacity-60"
+            : "bg-[var(--surface-2)] text-[var(--text-mid)] border-[var(--line)] hover:border-[var(--accent)] hover:text-[var(--text)]"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function MatchCard({
+  m,
+  data,
+  expanded,
+  onToggle,
+  userPick,
+  onPick,
+  saving,
+}: {
+  m: Match;
+  data: WorldCupData;
+  expanded: boolean;
+  onToggle: () => void;
+  userPick?: DailyPick;
+  onPick: (choice: DailyPickChoice) => void;
+  saving: boolean;
+}) {
   const home = data.teamMap[m.home];
   const away = data.teamMap[m.awayCode];
   const pickLabel = m.pickKind === "draw" ? "Draw" : `${data.teamMap[m.pick]?.name ?? m.pick} Win`;
   const confColor = m.conf >= 65 ? "var(--good)" : m.conf >= 50 ? "var(--accent)" : "var(--accent-warm)";
   const badgeCls = m.tag === "High confidence" ? "badge-good" : m.tag === "Upset watch" ? "badge-warm" : m.tag === "Coin flip" ? "badge-dim" : "badge-accent";
+  const locked = userPick?.locked ?? isPickLocked(m.kickoffAt);
 
   return (
     <div className={`card lift p-[18px] cursor-pointer ${expanded ? "is-open" : ""}`} onClick={onToggle}>
@@ -41,6 +92,35 @@ function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupDa
           </div>
           <Crest team={away} size={42} />
         </div>
+      </div>
+
+      <div
+        className="mt-4 p-3 rounded-[11px] border border-[var(--line)] bg-[var(--surface-2)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2 mb-2.5">
+          <Target size={14} className="text-[var(--accent-2)]" />
+          <span className="section-tag">Jack&apos;s pick</span>
+          {locked && <span className="badge badge-dim text-[10px] ml-auto">Locked</span>}
+          {!locked && !userPick && <span className="badge badge-warm text-[10px] ml-auto">Not set</span>}
+          {!locked && userPick && <span className="badge badge-good text-[10px] ml-auto">Saved</span>}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <PickButton active={userPick?.choice === "home"} disabled={locked || saving} onClick={() => onPick("home")}>
+            {home.code} Win
+          </PickButton>
+          <PickButton active={userPick?.choice === "draw"} disabled={locked || saving} onClick={() => onPick("draw")}>
+            Draw
+          </PickButton>
+          <PickButton active={userPick?.choice === "away"} disabled={locked || saving} onClick={() => onPick("away")}>
+            {away.code} Win
+          </PickButton>
+        </div>
+        {userPick && (
+          <div className="text-[var(--text-dim)] text-[11px] mt-2">
+            Your pick: <span className="text-[var(--text)] font-semibold">{userPick.pickLabel}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-3.5 mt-4">
@@ -96,12 +176,75 @@ function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupDa
 export function PicksView({ data }: { data: WorldCupData }) {
   const [open, setOpen] = useState<string | null>(data.matches[0]?.id ?? null);
   const [filter, setFilter] = useState<"all" | "conf">("all");
+  const [picks, setPicks] = useState<Record<string, DailyPick>>({});
+  const [pickSource, setPickSource] = useState<"pocketbase" | "local" | "unavailable" | "loading">("loading");
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const teamNames = useMemo(() => {
+    const names: Record<string, string> = {};
+    for (const t of data.teams) names[t.code] = t.name;
+    return names;
+  }, [data.teams]);
+
+  const loadPicks = useCallback(async () => {
+    const ids = data.matches.map((m) => m.id);
+    const { picks: loaded, source } = await fetchDailyPicks(ids);
+    const map: Record<string, DailyPick> = {};
+    for (const p of loaded) map[p.matchId] = p;
+    setPicks(map);
+    setPickSource(source);
+  }, [data.matches]);
+
+  useEffect(() => {
+    loadPicks();
+  }, [loadPicks]);
+
+  const handlePick = async (m: Match, choice: DailyPickChoice) => {
+    setError(null);
+    setSavingId(m.id);
+    try {
+      const { pick } = await saveDailyPick(m.id, choice, m.home, m.awayCode, m.kickoffAt, teamNames);
+      setPicks((prev) => ({ ...prev, [m.id]: pick }));
+      if (pickSource === "unavailable" || pickSource === "loading") {
+        setPickSource("local");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save pick");
+    } finally {
+      setSavingId(null);
+    }
+  };
+
   const shown = filter === "all" ? data.matches : data.matches.filter((m) => m.conf >= 60);
+  const setCount = data.matches.filter((m) => picks[m.id]).length;
+  const unsetCount = data.matches.length - setCount;
 
   return (
     <div className="fade-in">
+      <div className="card p-4 mb-4 flex flex-wrap items-center gap-3">
+        <div>
+          <div className="font-bold text-[14px]">Submit your picks before kickoff</div>
+          <div className="text-[var(--text-dim)] text-[12.5px] mt-0.5">
+            Tap Home Win, Draw, or Away Win on each match. Unset picks stay blank — the app won&apos;t default to the AI.
+          </div>
+        </div>
+        <div className="ml-auto flex items-center gap-2 flex-wrap">
+          <span className="badge badge-good">{setCount} set</span>
+          {unsetCount > 0 && <span className="badge badge-warm">{unsetCount} not set</span>}
+          {pickSource === "pocketbase" && <span className="badge badge-dim text-[10px]">Saved to server</span>}
+          {pickSource === "local" && <span className="badge badge-warm text-[10px]">Saved locally (dev mode)</span>}
+        </div>
+      </div>
+
+      {error && (
+        <div className="card p-3 mb-4 border-[rgba(var(--bad-rgb),0.3)] text-[var(--bad)] text-[13px]">
+          {error}
+        </div>
+      )}
+
       <div className="flex items-center gap-3.5 mb-4 flex-wrap">
-        <div className="segment">
+        <div className="segment self-start">
           <button className={filter === "all" ? "on" : ""} onClick={() => setFilter("all")}>All {data.matches.length}</button>
           <button className={filter === "conf" ? "on" : ""} onClick={() => setFilter("conf")}>High confidence</button>
         </div>
@@ -109,11 +252,29 @@ export function PicksView({ data }: { data: WorldCupData }) {
           <RefreshCw size={13} /> Morning refresh · {data.meta.lastUpdate}
         </div>
       </div>
-      <div className="grid gap-[18px] stagger" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))" }}>
-        {shown.map((m) => (
-          <MatchCard key={m.id} m={m} data={data} expanded={open === m.id} onToggle={() => setOpen(open === m.id ? null : m.id)} />
-        ))}
-      </div>
+
+      {data.matches.length === 0 ? (
+        <div className="card p-8 text-center">
+          <Clock size={28} className="mx-auto mb-3 opacity-20" />
+          <div className="text-[var(--text-mid)] font-medium mb-1">No matches scheduled right now</div>
+          <div className="text-[var(--text-dim)] text-[12.5px]">Check back after the morning refresh when fixtures are loaded.</div>
+        </div>
+      ) : (
+        <div className="grid gap-[18px] stagger" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))" }}>
+          {shown.map((m) => (
+            <MatchCard
+              key={m.id}
+              m={m}
+              data={data}
+              expanded={open === m.id}
+              onToggle={() => setOpen(open === m.id ? null : m.id)}
+              userPick={picks[m.id]}
+              onPick={(choice) => handlePick(m, choice)}
+              saving={savingId === m.id}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
