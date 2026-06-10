@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell, Footprints, Grid3X3, RefreshCw, Target, Trophy,
+  Bell, Footprints, Grid3X3, Target, Trophy,
 } from "lucide-react";
 import type { WorldCupData } from "@/types/world-cup";
-import { basePath } from "@/lib/base-path";
 import { LocalTime } from "@/components/ui/primitives";
 
 const NAV = [
@@ -31,15 +30,6 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
   const pathname = usePathname();
   const meta = PAGE_META[pathname] ?? PAGE_META["/overview"];
   const highAlerts = data.news.filter((n) => n.sev === "high").length;
-
-  async function handleRefresh() {
-    try {
-      await fetch(`${basePath}/api/refresh`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ confirm: true }) });
-      window.location.reload();
-    } catch {
-      window.location.reload();
-    }
-  }
 
   return (
     <div
@@ -119,9 +109,6 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
             Updated <LocalTime iso={data.meta.lastUpdateAt} fallback={data.meta.lastUpdate} />
             <span className="text-[var(--text-dim)] font-semibold">· next {data.meta.nextRefresh}</span>
           </div>
-          <button onClick={handleRefresh} className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--line)] rounded-xl px-3.5 py-2 text-[13px] font-semibold hover:bg-[var(--surface-2)]">
-            <RefreshCw size={16} /> Refresh
-          </button>
           <div className="w-9 h-9 rounded-[11px] bg-gradient-to-br from-[var(--accent)] to-[var(--accent-3)] grid place-items-center text-[#07090F] font-extrabold text-sm display">AM</div>
         </header>
         <div className="px-7 pb-12 pt-1">{children}</div>
