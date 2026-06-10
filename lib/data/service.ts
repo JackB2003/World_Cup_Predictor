@@ -22,7 +22,7 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
         pb.collection(COLLECTIONS.predictions).getFullList(),
         pb.collection(COLLECTIONS.scorers).getFullList({ sort: "-prob" }),
         pb.collection(COLLECTIONS.news).getFullList(),
-        pb.collection(COLLECTIONS.userPicks).getFullList({ sort: "-created" }),
+        pb.collection(COLLECTIONS.userPicks).getFullList(),
         pb.collection(COLLECTIONS.meta).getFullList({ filter: 'key = "dashboard"' }),
         pb.collection(COLLECTIONS.meta).getFullList({ filter: 'key = "modelWeights"' }),
       ]);
@@ -104,7 +104,8 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
       modelWeights,
       meta: { ...meta, matchesToday: todayMatches.length || meta.matchesToday },
     };
-  } catch {
+  } catch (err) {
+    console.error("[fetchWorldCupData] PocketBase fetch failed, falling back to seed data:", err);
     return SEED_DATA;
   }
 }
