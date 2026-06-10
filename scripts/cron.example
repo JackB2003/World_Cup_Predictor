@@ -1,0 +1,11 @@
+# VPS cron entries for deploy user (crontab -e)
+# Adjust paths and timezone as needed.
+
+# Morning refresh — 6:00 AM daily
+0 6 * * * cd /var/www/world-cup-predictor && /usr/bin/npm run refresh:morning >> /var/log/world-cup-refresh.log 2>&1
+
+# Pre-match refresh — 90 min before typical first kickoff (example: 11:30 AM)
+30 11 * * * cd /var/www/world-cup-predictor && /usr/bin/npm run refresh:prematch >> /var/log/world-cup-refresh.log 2>&1
+
+# PocketBase backup — 3:00 AM daily
+0 3 * * * tar -czf /var/backups/pocketbase-$(date +\%Y\%m\%d).tar.gz -C /var/www/pocketbase pb_data
