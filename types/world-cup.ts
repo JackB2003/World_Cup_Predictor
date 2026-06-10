@@ -69,7 +69,7 @@ export interface Scorer {
 
 export interface NewsItem {
   id?: string;
-  type: "injury" | "suspension" | "lineup" | "news" | "odds";
+  type: "injury" | "suspension" | "lineup" | "news" | "odds" | "form";
   sev: "high" | "med" | "low";
   team: string;
   title: string;

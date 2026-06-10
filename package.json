@@ -24,7 +24,10 @@
     "refresh:prediction-data": "tsx scripts/refresh-prediction-data.ts",
     "grade:picks": "tsx scripts/grade-picks.ts",
     "test": "tsx --test features/predictions/match-engine.test.ts",
-    "fallow:audit": "fallow audit"
+    "fallow:audit": "fallow audit",
+    "news:add": "tsx scripts/add-news.ts",
+    "news:generate": "tsx scripts/generate-news.ts",
+    "import:lineups": "tsx scripts/import-lineups.ts"
   },
   "dependencies": {
     "lucide-react": "^0.511.0",
