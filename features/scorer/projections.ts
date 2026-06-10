@@ -14,12 +14,38 @@ function injuryModifier(risk?: string): number {
   return 1;
 }
 
-function groupModifier(difficulty?: number): number {
-  return difficulty ?? 0.95;
+/**
+ * Expected total matches derived from Monte Carlo simulation results.
+ * Formula: 3 group games + expected knockout games
+ *   P(play R32)   = advance/100
+ *   P(play R16)   ≈ advance/100 × 0.5
+ *   P(play QF)    ≈ advance/100 × 0.25
+ *   P(play SF)    = top4/100  (directly from simulation)
+ *   P(play Final) ≈ top4/100 × 0.5
+ * Combines to: 3 + adv×1.75 + top4×1.5
+ */
+function expectedMatches(team: Team): number {
+  const adv = (team.advance ?? 0) / 100;
+  const top4 = (team.top4 ?? 0) / 100;
+  return 3 + adv * 1.75 + top4 * 1.5;
 }
 
-function computeScorerScore(scorer: Scorer, team?: Team): number {
-  const matches = scorer.projectedMatches ?? (team ? Math.round(team.advance / 14) : 5);
+/**
+ * Group difficulty modifier based on average opponent Elo in the team's real group.
+ * Neutral (1.0) at avg-opponent Elo of 1650. Harder opponents → lower modifier.
+ * Range: [0.88, 1.02].
+ */
+function groupDifficulty(team: Team, allTeams: Team[]): number {
+  if (!team.group) return 0.95;
+  const opponents = allTeams.filter((t) => t.group === team.group && t.code !== team.code);
+  if (!opponents.length) return 0.95;
+  const avgElo = opponents.reduce((s, t) => s + (t.elo ?? 1700), 0) / opponents.length;
+  return Math.max(0.88, Math.min(1.02, 1.0 - (avgElo - 1650) * 0.0002));
+}
+
+function computeScorerScore(scorer: Scorer, team: Team | undefined, allTeams: Team[]): number {
+  const matches = team ? expectedMatches(team) : (scorer.projectedMatches ?? 5);
+  const grpDiff = team ? groupDifficulty(team, allTeams) : (scorer.groupDifficulty ?? 0.95);
   const minutes = (scorer.minutes ?? 80) / 90;
   const g90 = scorer.g90 ?? 0.5;
   return (
@@ -27,7 +53,7 @@ function computeScorerScore(scorer: Scorer, team?: Team): number {
     minutes *
     g90 *
     penaltyBonus(scorer.pens) *
-    groupModifier(scorer.groupDifficulty) *
+    grpDiff *
     injuryModifier(scorer.injuryRisk)
   );
 }
@@ -35,11 +61,16 @@ function computeScorerScore(scorer: Scorer, team?: Team): number {
 export function rankScorers(scorers: Scorer[], teams: Team[]): ScorerProjection[] {
   const teamMap = Object.fromEntries(teams.map((t) => [t.code, t]));
   const projected = scorers.map((s) => {
-    const score = computeScorerScore(s, teamMap[s.team]);
+    const team = teamMap[s.team];
+    const score = computeScorerScore(s, team, teams);
+    const projectedMatchesCalc = team ? Math.round(expectedMatches(team) * 10) / 10 : (s.projectedMatches ?? 5);
+    const groupDiffCalc = team ? Math.round(groupDifficulty(team, teams) * 1000) / 1000 : (s.groupDifficulty ?? 0.95);
     return {
       ...s,
       score,
       proj: Math.round(score * 10) / 10,
+      projectedMatches: projectedMatchesCalc,
+      groupDifficulty: groupDiffCalc,
     };
   });
 

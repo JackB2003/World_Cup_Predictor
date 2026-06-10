@@ -37,6 +37,11 @@ async function main() {
           await pb.collection(COLLECTIONS.scorers).update(existing[0].id, {
             proj: s.proj,
             prob: s.prob,
+            // Persist computed values so they're visible in the admin UI and display correctly
+            projectedMatches: s.projectedMatches,
+            groupDifficulty: s.groupDifficulty,
+            // Reset tournament goals to 0 if tournament hasn't produced real goals yet
+            ...(existing[0].goals > 0 && existing[0].goals <= 3 ? { goals: 0 } : {}),
           });
         }
       }
