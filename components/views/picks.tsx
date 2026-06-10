@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Bolt, Check, ChevronRight, Clock, Info, RefreshCw } from "lucide-react";
 import type { Match, WorldCupData } from "@/types/world-cup";
-import { Crest, TriBar, teamColor } from "@/components/ui/primitives";
+import { Crest, LocalTime, TriBar, teamColor } from "@/components/ui/primitives";
 
 function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupData; expanded: boolean; onToggle: () => void }) {
   const home = data.teamMap[m.home];
@@ -16,7 +16,7 @@ function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupDa
     <div className={`card lift p-[18px] cursor-pointer ${expanded ? "is-open" : ""}`} onClick={onToggle}>
       <div className="flex items-center gap-2.5 mb-3.5">
         <span className="section-tag">{m.stage}</span>
-        <span className="text-[var(--text-dim)] text-xs flex items-center gap-1"><Clock size={12} /> {m.time}</span>
+        <span className="text-[var(--text-dim)] text-xs flex items-center gap-1"><Clock size={12} /> <LocalTime iso={m.kickoffAt} fallback={m.time} /></span>
         <span className={`badge ${badgeCls} ml-auto`}>{m.tag}</span>
       </div>
 
@@ -34,12 +34,12 @@ function MatchCard({ m, data, expanded, onToggle }: { m: Match; data: WorldCupDa
           </div>
           <div className="section-tag mt-0.5">Predicted</div>
         </div>
-        <div className="flex items-center gap-2.5 justify-end flex-row-reverse">
-          <Crest team={away} size={42} />
+        <div className="flex items-center gap-2.5 justify-end">
           <div className="text-right">
             <div className="font-bold text-[14.5px]">{away.name}</div>
             <div className="text-[var(--text-dim)] text-[11.5px]">Elo {away.elo}</div>
           </div>
+          <Crest team={away} size={42} />
         </div>
       </div>
 

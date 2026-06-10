@@ -122,6 +122,7 @@ export interface Meta {
   kickoff: string;
   simRuns: number;
   lastUpdate: string;
+  lastUpdateAt?: string;
   nextRefresh: string;
   matchesToday: number;
 }
