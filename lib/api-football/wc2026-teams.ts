@@ -41,7 +41,7 @@ export const WC2026_TEAMS: Wc2026Team[] = [
   { code: "EGY", name: "Egypt", apiTeamId: 24, aliases: ["egypt"] },
   { code: "IRN", name: "IR Iran", apiTeamId: 32, aliases: ["ir iran", "iran"] },
   { code: "NZL", name: "New Zealand", apiTeamId: 4673, aliases: ["new zealand"] },
-  { code: "CPV", name: "Cabo Verde", apiTeamId: 1524, aliases: ["cabo verde", "cape verde"] },
+  { code: "CPV", name: "Cabo Verde", apiTeamId: 1524, aliases: ["cabo verde", "cape verde", "cape verde islands"] },
   { code: "KSA", name: "Saudi Arabia", apiTeamId: 33, aliases: ["saudi arabia"] },
   { code: "ESP", name: "Spain", apiTeamId: 9, aliases: ["spain"] },
   { code: "URU", name: "Uruguay", apiTeamId: 7, aliases: ["uruguay"] },
@@ -65,9 +65,11 @@ export const WC2026_TEAMS: Wc2026Team[] = [
 
 export const WC2026_CODES = new Set(WC2026_TEAMS.map((t) => t.code));
 
-export const TEAM_ID_TO_CODE: Record<number, string> = Object.fromEntries(
-  WC2026_TEAMS.map((t) => [t.apiTeamId, t.code]),
-);
+export const TEAM_ID_TO_CODE: Record<number, string> = {
+  ...Object.fromEntries(WC2026_TEAMS.map((t) => [t.apiTeamId, t.code])),
+  // API-Football World Cup fixtures list this team as "Cape Verde Islands" (id 2597).
+  2597: "CPV",
+};
 
 export const NAME_ALIASES: Record<string, string> = Object.fromEntries(
   WC2026_TEAMS.flatMap((t) => [

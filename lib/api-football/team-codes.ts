@@ -9,7 +9,7 @@ import {
   WC2026_CODES,
 } from "@/lib/api-football/wc2026-teams";
 
-export { TEAM_ID_TO_CODE, NAME_ALIASES } from "@/lib/api-football/wc2026-teams";
+export { NAME_ALIASES, TEAM_ID_TO_CODE } from "@/lib/api-football/wc2026-teams";
 
 export function normalizeTeamName(name: string): string {
   return name
