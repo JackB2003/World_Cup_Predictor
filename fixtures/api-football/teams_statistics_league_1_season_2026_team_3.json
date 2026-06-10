@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 3, "name": "Croatia" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "LWDLD",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 0 }, "draws": { "total": 0 }, "loses": { "total": 1 } },
+    "goals": {
+      "for": { "total": { "total": 0 }, "average": { "total": "1.50" } },
+      "against": { "total": { "total": 2 }, "average": { "total": "2.00" } }
+    }
+  }
+}

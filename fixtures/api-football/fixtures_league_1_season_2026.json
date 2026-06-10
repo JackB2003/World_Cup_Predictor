@@ -1,0 +1,75 @@
+{
+  "response": [
+    {
+      "fixture": { "id": 10001, "date": "2026-06-05T19:00:00+00:00", "status": { "short": "FT" } },
+      "league": { "round": "Group F · MD1" },
+      "teams": { "home": { "id": 2, "name": "France" }, "away": { "id": 25, "name": "Germany" } },
+      "goals": { "home": 2, "away": 1 },
+      "venue": { "name": "MetLife Stadium", "city": "New Jersey" }
+    },
+    {
+      "fixture": { "id": 10002, "date": "2026-06-06T16:00:00+00:00", "status": { "short": "FT" } },
+      "league": { "round": "Group E · MD1" },
+      "teams": { "home": { "id": 3, "name": "Croatia" }, "away": { "id": 9, "name": "Spain" } },
+      "goals": { "home": 0, "away": 2 },
+      "venue": { "name": "Mercedes-Benz Stadium", "city": "Atlanta" }
+    },
+    {
+      "fixture": { "id": 10003, "date": "2026-06-07T13:00:00+00:00", "status": { "short": "FT" } },
+      "league": { "round": "Group A · MD1" },
+      "teams": { "home": { "id": 16, "name": "Mexico" }, "away": { "id": 26, "name": "Argentina" } },
+      "goals": { "home": 1, "away": 1 },
+      "venue": { "name": "Estadio Azteca", "city": "Mexico City" }
+    },
+    {
+      "fixture": { "id": 10004, "date": "2026-06-08T19:00:00+00:00", "status": { "short": "FT" } },
+      "league": { "round": "Group D · MD1" },
+      "teams": { "home": { "id": 2384, "name": "USA" }, "away": { "id": 31, "name": "Morocco" } },
+      "goals": { "home": 2, "away": 0 },
+      "venue": { "name": "SoFi Stadium", "city": "Los Angeles" }
+    },
+    {
+      "fixture": { "id": 10005, "date": "2026-06-09T16:00:00+00:00", "status": { "short": "FT" } },
+      "league": { "round": "Group B · MD1" },
+      "teams": { "home": { "id": 5529, "name": "Canada" }, "away": { "id": 1, "name": "Belgium" } },
+      "goals": { "home": 0, "away": 2 },
+      "venue": { "name": "BC Place", "city": "Vancouver" }
+    },
+    {
+      "fixture": { "id": 20001, "date": "2026-06-10T17:00:00+00:00", "status": { "short": "NS" } },
+      "league": { "round": "Group A · MD2" },
+      "teams": { "home": { "id": 16, "name": "Mexico" }, "away": { "id": 7, "name": "Uruguay" } },
+      "goals": { "home": null, "away": null },
+      "venue": { "name": "Estadio Azteca", "city": "Mexico City" }
+    },
+    {
+      "fixture": { "id": 20002, "date": "2026-06-10T20:00:00+00:00", "status": { "short": "NS" } },
+      "league": { "round": "Group F · MD2" },
+      "teams": { "home": { "id": 2, "name": "France" }, "away": { "id": 3, "name": "Croatia" } },
+      "goals": { "home": null, "away": null },
+      "venue": { "name": "MetLife Stadium", "city": "New Jersey" }
+    },
+    {
+      "fixture": { "id": 20003, "date": "2026-06-10T23:00:00+00:00", "status": { "short": "NS" } },
+      "league": { "round": "Group D · MD2" },
+      "teams": { "home": { "id": 2384, "name": "USA" }, "away": { "id": 25, "name": "Germany" } },
+      "goals": { "home": null, "away": null },
+      "venue": { "name": "SoFi Stadium", "city": "Los Angeles" }
+    },
+    {
+      "fixture": { "id": 20004, "date": "2026-06-10T01:30:00+00:00", "status": { "short": "NS" } },
+      "league": { "round": "Group C · MD2" },
+      "teams": { "home": { "id": 10, "name": "England" }, "away": { "id": 31, "name": "Morocco" } },
+      "goals": { "home": null, "away": null },
+      "venue": { "name": "Mercedes-Benz Stadium", "city": "Atlanta" }
+    },
+    {
+      "fixture": { "id": 20005, "date": "2026-06-10T02:00:00+00:00", "status": { "short": "NS" } },
+      "league": { "round": "Group B · MD2" },
+      "teams": { "home": { "id": 5529, "name": "Canada" }, "away": { "id": 11, "name": "Netherlands" } },
+      "goals": { "home": null, "away": null },
+      "venue": { "name": "BC Place", "city": "Vancouver" }
+    }
+  ],
+  "results": 10
+}

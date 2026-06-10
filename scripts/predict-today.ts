@@ -30,7 +30,10 @@ async function main() {
     for (const m of targets) {
       const home = teamMap[m.homeCode];
       const away = teamMap[m.awayCode];
-      if (!home || !away) continue;
+      if (!home || !away) {
+        console.warn(`  skip ${m.matchId}: missing team data (${m.homeCode} / ${m.awayCode})`);
+        continue;
+      }
 
       let pred = predictMatch(home, away, news);
       const enhanced = await enhancePredictionReasoning(home, away, pred);

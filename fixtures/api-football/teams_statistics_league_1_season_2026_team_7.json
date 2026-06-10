@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 7, "name": "Uruguay" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "WLWDW",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 0 }, "draws": { "total": 0 }, "loses": { "total": 1 } },
+    "goals": {
+      "for": { "total": { "total": 1 }, "average": { "total": "1.80" } },
+      "against": { "total": { "total": 3 }, "average": { "total": "3.00" } }
+    }
+  }
+}

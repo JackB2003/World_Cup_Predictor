@@ -1,0 +1,36 @@
+{
+  "response": [
+    {
+      "league": { "id": 1, "name": "World Cup", "country": "World", "season": 2026 },
+      "standings": [
+        [
+          { "rank": 1, "team": { "id": 26, "name": "Argentina" }, "points": 3, "goalsDiff": 2, "group": "Group A", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 3, "against": 1 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 16, "name": "Mexico" }, "points": 1, "goalsDiff": 0, "group": "Group A", "all": { "played": 1, "win": 0, "draw": 1, "lose": 0, "goals": { "for": 1, "against": 1 } }, "description": null },
+          { "rank": 3, "team": { "id": 7, "name": "Uruguay" }, "points": 0, "goalsDiff": -2, "group": "Group A", "all": { "played": 1, "win": 0, "draw": 0, "lose": 1, "goals": { "for": 1, "against": 3 } }, "description": null }
+        ],
+        [
+          { "rank": 1, "team": { "id": 11, "name": "Netherlands" }, "points": 3, "goalsDiff": 2, "group": "Group B", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 0 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 1, "name": "Belgium" }, "points": 3, "goalsDiff": 2, "group": "Group B", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 0 } }, "description": null },
+          { "rank": 3, "team": { "id": 5529, "name": "Canada" }, "points": 0, "goalsDiff": -2, "group": "Group B", "all": { "played": 1, "win": 0, "draw": 0, "lose": 1, "goals": { "for": 0, "against": 2 } }, "description": null }
+        ],
+        [
+          { "rank": 1, "team": { "id": 10, "name": "England" }, "points": 3, "goalsDiff": 1, "group": "Group C", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 1 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 31, "name": "Morocco" }, "points": 1, "goalsDiff": 0, "group": "Group C", "all": { "played": 1, "win": 0, "draw": 1, "lose": 0, "goals": { "for": 1, "against": 1 } }, "description": null }
+        ],
+        [
+          { "rank": 1, "team": { "id": 2384, "name": "USA" }, "points": 3, "goalsDiff": 2, "group": "Group D", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 0 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 25, "name": "Germany" }, "points": 0, "goalsDiff": -1, "group": "Group D", "all": { "played": 1, "win": 0, "draw": 0, "lose": 1, "goals": { "for": 1, "against": 2 } }, "description": null }
+        ],
+        [
+          { "rank": 1, "team": { "id": 9, "name": "Spain" }, "points": 3, "goalsDiff": 2, "group": "Group E", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 0 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 3, "name": "Croatia" }, "points": 0, "goalsDiff": -2, "group": "Group E", "all": { "played": 1, "win": 0, "draw": 0, "lose": 1, "goals": { "for": 0, "against": 2 } }, "description": null }
+        ],
+        [
+          { "rank": 1, "team": { "id": 2, "name": "France" }, "points": 3, "goalsDiff": 1, "group": "Group F", "all": { "played": 1, "win": 1, "draw": 0, "lose": 0, "goals": { "for": 2, "against": 1 } }, "description": "Promotion" },
+          { "rank": 2, "team": { "id": 3, "name": "Croatia" }, "points": 0, "goalsDiff": -1, "group": "Group F", "all": { "played": 1, "win": 0, "draw": 0, "lose": 1, "goals": { "for": 1, "against": 2 } }, "description": null }
+        ]
+      ]
+    }
+  ],
+  "results": 1
+}

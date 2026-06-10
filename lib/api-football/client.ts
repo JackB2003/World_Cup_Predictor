@@ -46,9 +46,12 @@ async function logRequest(
   });
 }
 
+function mockFileName(endpoint: string, params?: Record<string, string | number>): string {
+  return cacheKey(endpoint, params).replace(/[?&=/]/g, "_").replace(/^_+/, "");
+}
+
 async function readMock(endpoint: string, params?: Record<string, string | number>): Promise<unknown> {
-  const key = cacheKey(endpoint, params).replace(/[?&=]/g, "_");
-  const file = path.join(process.cwd(), "fixtures", "api-football", `${key}.json`);
+  const file = path.join(process.cwd(), "fixtures", "api-football", `${mockFileName(endpoint, params)}.json`);
   try {
     const raw = await fs.readFile(file, "utf-8");
     return JSON.parse(raw);
@@ -159,6 +162,8 @@ export const apiFootball = {
     apiFootballFetch({ endpoint: "/players/topscorers", params, ttlHours: 12 }),
   injuries: (params: Record<string, string | number>) =>
     apiFootballFetch({ endpoint: "/injuries", params, ttlHours: 4 }),
+  teamStatistics: (params: Record<string, string | number>) =>
+    apiFootballFetch({ endpoint: "/teams/statistics", params, ttlHours: 12 }),
   predictions: (params: Record<string, string | number>) =>
     apiFootballFetch({ endpoint: "/predictions", params, ttlHours: 2 }),
   leagues: (params: Record<string, string | number>) =>

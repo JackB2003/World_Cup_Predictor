@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 2, "name": "France" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "WWDWW",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 1 }, "draws": { "total": 0 }, "loses": { "total": 0 } },
+    "goals": {
+      "for": { "total": { "total": 2 }, "average": { "total": "2.40" } },
+      "against": { "total": { "total": 1 }, "average": { "total": "1.00" } }
+    }
+  }
+}
