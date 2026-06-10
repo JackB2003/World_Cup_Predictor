@@ -153,20 +153,20 @@ POCKETBASE_URL=http://127.0.0.1:8090
 
 ```env
 # PocketBase admin (required for seed/setup scripts)
-POCKETBASE_ADMIN_EMAIL=jackbonner73104@gmail.com
-POCKETBASE_ADMIN_PASSWORD=Triple0524$
+POCKETBASE_ADMIN_EMAIL=your_admin_email@example.com
+POCKETBASE_ADMIN_PASSWORD=your_secure_password_here
 
 # API-Football (server-side only — never expose to browser or Git)
-API_FOOTBALL_KEY=d679d41f3147ddb93c377fd0dc2e31d5
+API_FOOTBALL_KEY=your_api_football_key_here
 API_FOOTBALL_MOCK=true
 WORLD_CUP_LEAGUE_ID=1
 WORLD_CUP_SEASON=2026
 
 # OpenAI (optional — enhances prediction reasoning)
-OPENAI_API_KEY=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
+OPENAI_API_KEY=your_openai_api_key_here
 
-# Optional — protects manual refresh API endpoint
-ADMIN_REFRESH_TOKEN=
+# Required in production — protects manual refresh API endpoint
+ADMIN_REFRESH_TOKEN=your_refresh_token_here
 ```
 
 **After any `.env` change:**

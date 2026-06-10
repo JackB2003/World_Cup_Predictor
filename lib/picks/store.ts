@@ -1,5 +1,6 @@
-import { ensureAdminAuth } from "@/lib/pocketbase/admin";
+import { ensureAdminAuth, getPublicPocketBase } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
+import { assertValidMatchId, pbFieldEquals } from "@/lib/pocketbase/filter-utils";
 import {
   type DailyPickChoice,
   type DailyPickRecord,
@@ -39,9 +40,10 @@ function mapPickRow(row: PickRow): DailyPickRecord {
 }
 
 export async function getDailyPicks(matchIds?: string[]): Promise<DailyPickRecord[]> {
-  const pb = await ensureAdminAuth();
+  matchIds?.forEach(assertValidMatchId);
+  const pb = getPublicPocketBase();
   const filter = matchIds?.length
-    ? matchIds.map((id) => `matchId = "${id}"`).join(" || ")
+    ? matchIds.map((id) => pbFieldEquals("matchId", id)).join(" || ")
     : "";
   const rows = await pb.collection(COLLECTIONS.userDailyPicks).getFullList({
     ...(filter ? { filter } : {}),
@@ -51,8 +53,9 @@ export async function getDailyPicks(matchIds?: string[]): Promise<DailyPickRecor
 }
 
 async function getMatchForPick(pb: Pb, matchId: string): Promise<MatchRow | null> {
+  assertValidMatchId(matchId);
   const rows = await pb.collection(COLLECTIONS.matches).getFullList({
-    filter: `matchId = "${matchId}"`,
+    filter: pbFieldEquals("matchId", matchId),
   });
   if (!rows[0]) return null;
   const m = rows[0];
@@ -69,6 +72,7 @@ export async function submitDailyPick(
   choice: DailyPickChoice,
   teamNames: Record<string, string>,
 ): Promise<DailyPickRecord> {
+  assertValidMatchId(matchId);
   const pb = await ensureAdminAuth();
   const match = await getMatchForPick(pb, matchId);
   if (!match) throw new Error(`Match not found: ${matchId}`);
@@ -89,7 +93,7 @@ export async function submitDailyPick(
   };
 
   const existing = await pb.collection(COLLECTIONS.userDailyPicks).getFullList({
-    filter: `matchId = "${matchId}"`,
+    filter: pbFieldEquals("matchId", matchId),
   });
 
   if (existing[0]) {

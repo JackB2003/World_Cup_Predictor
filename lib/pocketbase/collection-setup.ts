@@ -7,6 +7,32 @@ type FieldDef = {
   options?: Record<string, unknown>;
 };
 
+const SUPERUSER_ONLY = { createRule: null, updateRule: null, deleteRule: null };
+
+async function reconcileCollectionRules(
+  pb: Awaited<ReturnType<typeof ensureAdminAuth>>,
+  name: string,
+  listRule = "",
+  viewRule = "",
+) {
+  const coll = await pb.collections.getOne(name);
+  const needsUpdate =
+    coll.listRule !== listRule ||
+    coll.viewRule !== viewRule ||
+    coll.createRule !== null ||
+    coll.updateRule !== null ||
+    coll.deleteRule !== null;
+
+  if (!needsUpdate) return;
+
+  await pb.collections.update(name, {
+    listRule,
+    viewRule,
+    ...SUPERUSER_ONLY,
+  });
+  console.log(`  ↻ ${name} rules updated`);
+}
+
 async function ensureCollection(
   pb: Awaited<ReturnType<typeof ensureAdminAuth>>,
   name: string,
@@ -17,6 +43,7 @@ async function ensureCollection(
   try {
     await pb.collections.getOne(name);
     console.log(`  ✓ ${name} exists`);
+    await reconcileCollectionRules(pb, name, listRule, viewRule);
     return;
   } catch {
     // create
@@ -33,9 +60,7 @@ async function ensureCollection(
     })),
     listRule,
     viewRule,
-    createRule: "",
-    updateRule: "",
-    deleteRule: "",
+    ...SUPERUSER_ONLY,
   });
   console.log(`  + created ${name}`);
 }

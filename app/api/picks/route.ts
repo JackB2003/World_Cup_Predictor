@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDailyPicks, submitDailyPick } from "@/lib/picks/store";
 import type { DailyPickChoice } from "@/features/picks/daily-picks";
+import { isValidMatchId, validateTeamNames } from "@/lib/pocketbase/filter-utils";
 
 const VALID_CHOICES = new Set<DailyPickChoice>(["home", "draw", "away"]);
 
@@ -12,6 +13,9 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const matchIds = searchParams.get("matchIds")?.split(",").filter(Boolean);
+    if (matchIds?.some((id) => !isValidMatchId(id))) {
+      return NextResponse.json({ error: "Invalid matchId in matchIds" }, { status: 400 });
+    }
     const picks = await getDailyPicks(matchIds);
     return NextResponse.json({ picks, source: "pocketbase" });
   } catch (err) {
@@ -40,10 +44,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const pick = await submitDailyPick(matchId, choice, teamNames ?? {});
+    if (!isValidMatchId(matchId)) {
+      return NextResponse.json({ error: "Invalid matchId format" }, { status: 400 });
+    }
+
+    const pick = await submitDailyPick(matchId, choice, validateTeamNames(teamNames ?? {}));
     return NextResponse.json({ pick });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to save pick";
+    if (message.startsWith("Invalid matchId")) {
+      return NextResponse.json({ error: message }, { status: 400 });
+    }
     const status = message.includes("lock") || message.includes("started") ? 403 : 400;
     return NextResponse.json({ error: message }, { status });
   }
