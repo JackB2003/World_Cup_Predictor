@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell, Footprints, Grid3X3, RefreshCw, Search, Target, Trophy,
+  Bell, Footprints, Grid3X3, RefreshCw, Target, Trophy,
 } from "lucide-react";
 import type { WorldCupData } from "@/types/world-cup";
 import { basePath } from "@/lib/base-path";
@@ -101,9 +101,6 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
             <p className="text-[13px] text-[var(--text-dim)] m-0 mt-0.5">{meta.sub}</p>
           </div>
           <div className="flex-1" />
-          <div className="hidden md:flex items-center gap-2 bg-[var(--surface)] border border-[var(--line)] rounded-xl px-3 py-2 text-[var(--text-dim)] text-[13px] min-w-[220px]">
-            <Search size={16} /> Search teams, players…
-          </div>
           <div className="flex items-center gap-2 bg-[rgba(var(--good-rgb),0.12)] border border-[rgba(var(--good-rgb),0.28)] text-[var(--good)] rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--good)]" />
             Updated <LocalTime iso={data.meta.lastUpdateAt} fallback={data.meta.lastUpdate} />

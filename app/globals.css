@@ -138,6 +138,8 @@ body {
 
 .segment {
   display: inline-flex;
+  align-items: center;
+  align-self: start;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 11px;
@@ -156,6 +158,7 @@ body {
   border: none;
   background: none;
   cursor: pointer;
+  align-self: center;
 }
 
 .segment button.on {
