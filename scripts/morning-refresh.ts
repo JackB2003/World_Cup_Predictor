@@ -23,6 +23,7 @@ async function main() {
       errors += `import: ${e}; `;
     }
 
+    execSync("npm run grade:picks", { stdio: "inherit" });
     execSync("npm run predict:top4", { stdio: "inherit" });
     execSync("npm run predict:scorer", { stdio: "inherit" });
     execSync("npm run news:generate", { stdio: "inherit" });
