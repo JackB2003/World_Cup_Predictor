@@ -87,13 +87,24 @@ async function main() {
     for (const h of h2hRaw) h2hByPair.set(`${h.homeCode}|${h.awayCode}`, h);
 
     const now = new Date();
-    // Always predict the next 5 upcoming matches (matches what the service displays).
-    // During matchdays this will be today+tomorrow; pre-tournament it covers
-    // the first upcoming fixture window so picks are never stale.
-    const targets = matchesRaw
-      .filter((m) => m.kickoffAt && new Date(m.kickoffAt as string) > new Date(now.getTime() - 3 * 3600 * 1000))
-      .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime())
-      .slice(0, 5);
+    // Predict matches in the next 36-hour window (mirrors service.ts logic).
+    // 36 hours covers US timezone offsets: a match at 02:00 UTC June 12 is
+    // still June 11 evening in ET/CT/MT/PT and should appear alongside June 11 games.
+    const windowEnd = new Date(now.getTime() + 36 * 3600 * 1000);
+    const windowTargets = matchesRaw
+      .filter((m) => {
+        if (!m.kickoffAt) return false;
+        const ko = new Date(m.kickoffAt as string);
+        return ko >= new Date(now.getTime() - 3 * 3600 * 1000) && ko <= windowEnd;
+      })
+      .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime());
+    // If the window catches no games (rare gap between matchdays), fall back to next 5.
+    const targets = windowTargets.length
+      ? windowTargets
+      : matchesRaw
+          .filter((m) => m.kickoffAt && new Date(m.kickoffAt as string) > new Date())
+          .sort((a, b) => new Date(a.kickoffAt as string).getTime() - new Date(b.kickoffAt as string).getTime())
+          .slice(0, 5);
 
     for (const m of targets) {
       const home = teamMap[m.homeCode];
