@@ -4,8 +4,8 @@ import { ensureAdminAuth } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
 
 const BASE_URL = "https://v3.football.api-sports.io";
-const DAILY_LIMIT = 100;
-const WARN_THRESHOLD = 95;
+const DAILY_LIMIT = 7500;
+const WARN_THRESHOLD = 7000;
 
 type FetchOptions = {
   endpoint: string;
@@ -172,4 +172,6 @@ export const apiFootball = {
     apiFootballFetch({ endpoint: "/odds", params, ttlHours: 6 }),
   squads: (params: Record<string, string | number>) =>
     apiFootballFetch({ endpoint: "/players/squads", params, ttlHours: 24 }),
+  lineups: (params: Record<string, string | number>) =>
+    apiFootballFetch({ endpoint: "/fixtures/lineups", params, ttlHours: 0.5 }),
 };

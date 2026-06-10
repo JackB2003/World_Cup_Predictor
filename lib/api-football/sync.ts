@@ -443,3 +443,68 @@ export async function syncUpcomingMatchTeamCodes(pb: Pb, daysAhead = 1): Promise
   }
   return [...codes];
 }
+
+type ApiLineupTeam = { id: number; name: string; code?: string | null };
+type ApiLineupPlayer = { player: { id: number; name: string; number?: number; pos?: string } };
+type ApiLineupItem = {
+  team: ApiLineupTeam;
+  formation?: string;
+  startXI?: ApiLineupPlayer[];
+  substitutes?: ApiLineupPlayer[];
+  coach?: { name?: string };
+};
+
+/** Sync official lineups for today's fixtures → news (announced ~1 hr before kickoff). */
+export async function syncLineupsToNews(pb: Pb): Promise<number> {
+  const refs = await loadPbTeamRefs(pb);
+  const pbTeams = refs.map((r) => r.team);
+
+  const matches = await pb.collection(COLLECTIONS.matches).getFullList();
+  const now = Date.now();
+  const window = 36 * 3600 * 1000;
+  const upcoming = matches.filter((m) => {
+    if (!m.apiFixtureId || !m.kickoffAt) return false;
+    const ko = new Date(m.kickoffAt).getTime();
+    return ko >= now - 3600 * 1000 && ko <= now + window;
+  });
+
+  if (!upcoming.length) return 0;
+
+  const existing = await pb.collection(COLLECTIONS.news).getFullList({
+    filter: 'type = "lineup"',
+  });
+  for (const n of existing) await pb.collection(COLLECTIONS.news).delete(n.id);
+
+  let count = 0;
+  for (const match of upcoming) {
+    try {
+      const res = (await apiFootball.lineups({ fixture: match.apiFixtureId })) as ApiListResponse<ApiLineupItem[]>;
+      const lineups = res.response ?? [];
+      if (!lineups.length) continue;
+
+      for (const lineup of lineups) {
+        const teamCode = resolveTeamCode(lineup.team, pbTeams);
+        if (!teamCode) continue;
+        const xi = lineup.startXI ?? [];
+        const starters = xi.slice(0, 5).map((p) => p.player.name).filter(Boolean).join(", ");
+        const formation = lineup.formation ?? "XI";
+        const opponent = lineups.find((l) => l.team.id !== lineup.team.id)?.team.name ?? "opponent";
+
+        await pb.collection(COLLECTIONS.news).create({
+          type: "lineup",
+          sev: "low",
+          teamCode,
+          title: `${lineup.team.name} name ${formation} vs ${opponent}`,
+          timeLabel: "Official",
+          impact: "Lineup confirmed — prediction updated",
+          body: `Formation: ${formation}. Starting: ${starters || "TBC"}${xi.length > 5 ? "..." : ""}`,
+          icon: "lineup",
+        });
+        count++;
+      }
+    } catch (e) {
+      console.warn(`  lineups skipped for fixture ${match.apiFixtureId}:`, e);
+    }
+  }
+  return count;
+}

@@ -25,6 +25,7 @@ async function main() {
 
     execSync("npm run predict:top4", { stdio: "inherit" });
     execSync("npm run predict:scorer", { stdio: "inherit" });
+    execSync("npm run news:generate", { stdio: "inherit" });
     execSync("npm run predict:today", { stdio: "inherit" });
     recordsUpdated += 3;
 
