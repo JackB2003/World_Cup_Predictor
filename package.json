@@ -19,6 +19,7 @@
     "import:elo-ratings": "tsx scripts/import-elo-ratings.ts",
     "refresh:prediction-data": "tsx scripts/refresh-prediction-data.ts",
     "grade:picks": "tsx scripts/grade-picks.ts",
+    "test": "tsx --test features/predictions/match-engine.test.ts",
     "fallow:audit": "fallow audit"
   },
   "dependencies": {
