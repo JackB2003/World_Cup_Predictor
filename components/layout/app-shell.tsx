@@ -19,7 +19,7 @@ const NAV = [
 ];
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
-  "/overview": { title: "Command Center", sub: "Your daily AI prediction briefing" },
+  "/overview": { title: "Overview", sub: "Your daily AI prediction briefing" },
   "/picks": { title: "Today's Picks", sub: "AI match predictions for all of today's fixtures" },
   "/outlook": { title: "Tournament Outlook", sub: "Championship odds & projected finishers · 10,000 simulations" },
   "/scorer": { title: "Top Scorer Watch", sub: "Golden Boot projections & the scoring race" },
@@ -87,9 +87,22 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
 
         <div className="mt-auto max-[1080px]:hidden">
           <div className="card p-3.5">
-            <div className="section-tag">Model accuracy</div>
-            <div className="num text-[30px] text-[var(--accent)] leading-none mt-1">71%</div>
-            <div className="text-[11.5px] text-[var(--text-mid)] mt-0.5">across 128 graded picks</div>
+            <div className="section-tag">Your pick accuracy</div>
+            {data.userPicks.history.length > 0 ? (
+              <>
+                <div className="num text-[30px] text-[var(--accent)] leading-none mt-1">
+                  {data.userPicks.accuracy}<span className="text-[18px]">%</span>
+                </div>
+                <div className="text-[11.5px] text-[var(--text-mid)] mt-0.5">
+                  across {data.userPicks.history.length} graded pick{data.userPicks.history.length !== 1 ? "s" : ""}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="num text-[30px] text-[var(--text-dim)] leading-none mt-1">—</div>
+                <div className="text-[11.5px] text-[var(--text-dim)] mt-0.5">picks grade after matches finish</div>
+              </>
+            )}
           </div>
         </div>
       </aside>
