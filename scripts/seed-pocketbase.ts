@@ -1,6 +1,11 @@
 import { ensureAdminAuth } from "@/lib/pocketbase/admin";
+import { TEAM_ID_TO_CODE } from "@/lib/api-football/team-codes";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
 import { SEED_DATA } from "@/lib/data/seed";
+
+const API_TEAM_ID_BY_CODE = Object.fromEntries(
+  Object.entries(TEAM_ID_TO_CODE).map(([id, code]) => [code, Number(id)]),
+);
 
 async function clearCollection(pb: Awaited<ReturnType<typeof ensureAdminAuth>>, name: string) {
   const records = await pb.collection(name).getFullList({ fields: "id" });
@@ -33,6 +38,7 @@ async function main() {
       conf: t.conf,
       trend: t.trend,
       host: t.host ?? false,
+      apiTeamId: API_TEAM_ID_BY_CODE[t.code],
       lastUpdated: new Date().toISOString(),
     });
   }

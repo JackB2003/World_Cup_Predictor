@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 25, "name": "Germany" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "DWWDW",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 0 }, "draws": { "total": 0 }, "loses": { "total": 1 } },
+    "goals": {
+      "for": { "total": { "total": 1 }, "average": { "total": "1.90" } },
+      "against": { "total": { "total": 2 }, "average": { "total": "2.00" } }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 16, "name": "Mexico" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "WDWLW",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 0 }, "draws": { "total": 1 }, "loses": { "total": 0 } },
+    "goals": {
+      "for": { "total": { "total": 1 }, "average": { "total": "1.50" } },
+      "against": { "total": { "total": 1 }, "average": { "total": "1.00" } }
+    }
+  }
+}

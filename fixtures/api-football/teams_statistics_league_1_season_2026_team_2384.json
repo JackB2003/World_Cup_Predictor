@@ -1,0 +1,12 @@
+{
+  "response": {
+    "team": { "id": 2384, "name": "USA" },
+    "league": { "id": 1, "season": 2026 },
+    "form": "WWDWL",
+    "fixtures": { "played": { "total": 1 }, "wins": { "total": 1 }, "draws": { "total": 0 }, "loses": { "total": 0 } },
+    "goals": {
+      "for": { "total": { "total": 2 }, "average": { "total": "1.60" } },
+      "against": { "total": { "total": 0 }, "average": { "total": "0.80" } }
+    }
+  }
+}

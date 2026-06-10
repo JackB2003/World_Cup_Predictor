@@ -15,6 +15,7 @@
     "refresh:morning": "tsx scripts/morning-refresh.ts",
     "refresh:prematch": "tsx scripts/prematch-refresh.ts",
     "import:api-football": "tsx scripts/import-api-football.ts",
+    "import:team-data": "tsx scripts/import-team-data.ts",
     "grade:picks": "tsx scripts/grade-picks.ts",
     "fallow:audit": "fallow audit"
   },

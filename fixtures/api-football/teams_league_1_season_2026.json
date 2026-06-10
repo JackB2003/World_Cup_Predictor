@@ -1,0 +1,23 @@
+{
+  "response": [
+    { "team": { "id": 26, "name": "Argentina", "code": "ARG", "country": "Argentina" } },
+    { "team": { "id": 2, "name": "France", "code": "FRA", "country": "France" } },
+    { "team": { "id": 9, "name": "Spain", "code": "ESP", "country": "Spain" } },
+    { "team": { "id": 10, "name": "England", "code": "ENG", "country": "England" } },
+    { "team": { "id": 6, "name": "Brazil", "code": "BRA", "country": "Brazil" } },
+    { "team": { "id": 27, "name": "Portugal", "code": "POR", "country": "Portugal" } },
+    { "team": { "id": 25, "name": "Germany", "code": "GER", "country": "Germany" } },
+    { "team": { "id": 11, "name": "Netherlands", "code": "NED", "country": "Netherlands" } },
+    { "team": { "id": 1, "name": "Belgium", "code": "BEL", "country": "Belgium" } },
+    { "team": { "id": 3, "name": "Croatia", "code": "CRO", "country": "Croatia" } },
+    { "team": { "id": 768, "name": "Italy", "code": "ITA", "country": "Italy" } },
+    { "team": { "id": 7, "name": "Uruguay", "code": "URU", "country": "Uruguay" } },
+    { "team": { "id": 2384, "name": "USA", "code": "USA", "country": "USA" } },
+    { "team": { "id": 16, "name": "Mexico", "code": "MEX", "country": "Mexico" } },
+    { "team": { "id": 31, "name": "Morocco", "code": "MAR", "country": "Morocco" } },
+    { "team": { "id": 5529, "name": "Canada", "code": "CAN", "country": "Canada" } },
+    { "team": { "id": 8, "name": "Colombia", "code": "COL", "country": "Colombia" } },
+    { "team": { "id": 12, "name": "Japan", "code": "JPN", "country": "Japan" } }
+  ],
+  "results": 18
+}

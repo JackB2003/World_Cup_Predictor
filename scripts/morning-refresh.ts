@@ -14,13 +14,12 @@ async function main() {
     requestCount = usage.used;
     console.log(`API usage before refresh: ${usage.used}/${usage.limit}`);
 
-    if (process.env.API_FOOTBALL_MOCK !== "true") {
-      try {
-        execSync("npm run import:api-football", { stdio: "inherit" });
-        recordsUpdated += 1;
-      } catch (e) {
-        errors += `import: ${e}; `;
-      }
+    try {
+      execSync("npm run import:api-football", { stdio: "inherit" });
+      execSync("npm run import:team-data", { stdio: "inherit" });
+      recordsUpdated += 2;
+    } catch (e) {
+      errors += `import: ${e}; `;
     }
 
     execSync("npm run predict:top4", { stdio: "inherit" });
