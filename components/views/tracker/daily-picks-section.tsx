@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Clock, Footprints, Target } from "lucide-react";
 import type { DailyPick, Match, Team, UserPicks } from "@/types/world-cup";
 import { CardHead, Crest, Sparkline } from "@/components/ui/primitives";
-import { basePath } from "@/lib/base-path";
 import { ResultIcon } from "@/components/views/tracker/result-icon";
 
 type DailyPicksSectionProps = {
@@ -38,7 +37,7 @@ export function DailyPicksSection({
         </div>
         <div className="text-(--text-dim) text-[12px]">
           Submit picks on{" "}
-          <Link href={`${basePath}/picks`} className="text-(--accent) font-semibold hover:underline">
+          <Link href="/picks" className="text-(--accent) font-semibold hover:underline">
             Today&apos;s Picks
           </Link>{" "}
           before kickoff. Unset picks stay blank.
