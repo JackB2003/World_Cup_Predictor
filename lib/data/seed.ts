@@ -121,7 +121,7 @@ const modelWeights = [
 const meta = {
   tournament: "FIFA World Cup 2026",
   hosts: "USA · Canada · Mexico",
-  kickoff: "2026-06-11T20:00:00.000Z",
+  kickoff: "2026-06-11T19:00:00.000Z",
   simRuns: 10000,
   lastUpdate: "7:02 AM",
   nextRefresh: "4:00 PM",

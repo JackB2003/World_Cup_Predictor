@@ -1,7 +1,7 @@
 import { getPublicPocketBase } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
 import { SEED_DATA } from "@/lib/data/seed";
-import { selectDisplayMatches, selectUpcomingWindow } from "@/lib/data/match-window";
+import { selectDisplayMatches, selectUpcomingWindow, resolveTournamentKickoff } from "@/lib/data/match-window";
 import {
   buildTeamMap,
   mapMatchesFromPb,
@@ -52,7 +52,11 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
       news,
       userPicks,
       modelWeights,
-      meta: { ...meta, matchesToday: todayMatches.length || meta.matchesToday },
+      meta: {
+        ...meta,
+        kickoff: resolveTournamentKickoff(matches, meta.kickoff),
+        matchesToday: todayMatches.length || meta.matchesToday,
+      },
     };
   } catch (err) {
     console.error("[fetchWorldCupData] PocketBase fetch failed, falling back to seed data:", err);
