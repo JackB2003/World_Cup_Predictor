@@ -106,7 +106,7 @@ function App() {
             <span className="sync-dot" /> Updated {WC.meta.lastUpdate} <span className="sync-sub">· next {WC.meta.nextRefresh}</span>
           </div>
           <button className="pill-btn" onClick={() => location.reload()}>{ICONS.refresh({ size: 16 })} Refresh</button>
-          <div className="avatar">AM</div>
+          <div className="avatar">JB</div>
         </header>
 
         <div className="page" key={tab}>
