@@ -1,5 +1,5 @@
 /**
- * Pre-flight check for Jack's daily pick flow.
+ * Pre-flight check for the daily pick flow.
  * Run: npm run picks:verify
  */
 import { ensureAdminAuth } from "@/lib/pocketbase/admin";
@@ -10,7 +10,7 @@ import { isPickLocked } from "@/features/picks/daily-picks";
 const FINISHED = new Set(["FT", "AET", "PEN"]);
 
 async function main() {
-  console.log("=== Jack's Daily Picks — Pre-flight Check ===\n");
+  console.log("=== Daily Picks — Pre-flight Check ===\n");
   let ok = true;
 
   if (!process.env.POCKETBASE_URL) {
@@ -126,10 +126,10 @@ async function main() {
 
   console.log("\n--- Tomorrow morning checklist ---");
   console.log("1. Morning refresh runs (6am cron or manual Refresh in app)");
-  console.log("2. Open Today's Picks — each match shows Jack's pick buttons");
+  console.log("2. Open Today's Picks — each match shows pick buttons");
   console.log("3. Select Home Win / Draw / Away Win before kickoff");
   console.log("4. After matches finish, run: npm run grade:picks");
-  console.log("5. Check Jack's Pick Tracker for results (coming in next UI pass)");
+  console.log("5. Check the Pick Tracker for results");
 
   if (!ok) {
     console.log("\n✗ Pre-flight check FAILED — fix issues above before tomorrow.");

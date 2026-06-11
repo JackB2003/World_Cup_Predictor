@@ -9,13 +9,17 @@ import {
 import type { WorldCupData } from "@/types/world-cup";
 import { LocalTime } from "@/components/ui/primitives";
 
+const OWNER_NAME = process.env.NEXT_PUBLIC_TRACKER_OWNER_NAME ?? "";
+const OWNER_INITIALS = process.env.NEXT_PUBLIC_TRACKER_OWNER_INITIALS ?? "WC";
+const TRACKER_LABEL = OWNER_NAME ? `${OWNER_NAME}'s Pick Tracker` : "Pick Tracker";
+
 const NAV = [
   { id: "/overview", label: "Overview", icon: Grid3X3 },
   { id: "/picks", label: "Today's Picks", icon: Footprints, badge: true },
   { id: "/outlook", label: "Tournament Outlook", icon: Trophy },
   { id: "/scorer", label: "Top Scorer Watch", icon: Target },
   { id: "/news", label: "News & Alerts", icon: Bell, badgeNews: true },
-  { id: "/tracker", label: "Jack's Pick Tracker", icon: Target },
+  { id: "/tracker", label: TRACKER_LABEL, icon: Target },
 ];
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
@@ -24,7 +28,7 @@ const PAGE_META: Record<string, { title: string; sub: string }> = {
   "/outlook": { title: "Tournament Outlook", sub: "Championship odds & projected finishers · 10,000 simulations" },
   "/scorer": { title: "Top Scorer Watch", sub: "Golden Boot projections & the scoring race" },
   "/news": { title: "News & Injury Alerts", sub: "Latest injury, suspension & roster intel that moves the model" },
-  "/tracker": { title: "Jack's Pick Tracker", sub: "Your picks vs what actually happened" },
+  "/tracker": { title: TRACKER_LABEL, sub: "Your picks vs what actually happened" },
 };
 
 export function AppShell({ data, children }: { data: WorldCupData; children: React.ReactNode }) {
@@ -140,7 +144,7 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
             Updated <LocalTime iso={data.meta.lastUpdateAt} fallback={data.meta.lastUpdate} />
             <span className="text-(--text-dim) font-semibold">· next {data.meta.nextRefresh}</span>
           </div>
-          <div className="w-9 h-9 rounded-[11px] bg-linear-to-br from-(--accent) to-(--accent-3) grid place-items-center text-[#07090F] font-extrabold text-sm display">JB</div>
+          <div className="w-9 h-9 rounded-[11px] bg-linear-to-br from-(--accent) to-(--accent-3) grid place-items-center text-[#07090F] font-extrabold text-sm display">{OWNER_INITIALS}</div>
         </header>
         <div className="px-7 pb-12 pt-1 max-md:px-4">{children}</div>
       </main>

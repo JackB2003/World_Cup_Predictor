@@ -6,13 +6,13 @@
 
 **AI-powered FIFA World Cup 2026 prediction dashboard**
 
-[![Live](https://img.shields.io/badge/live-pitchiq2026.com-c8f04f?style=flat-square&logo=vercel&logoColor=black)](https://pitchiq2026.com)
+[![Use this template](https://img.shields.io/badge/use_this_template-2ea44f?style=flat-square&logo=github&logoColor=white)](https://github.com/JackB2003/World_Cup_Predictor/generate)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![PocketBase](https://img.shields.io/badge/PocketBase-0.39-b8dbe4?style=flat-square)](https://pocketbase.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![License](https://img.shields.io/badge/license-private-gray?style=flat-square)](#)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](#)
 
-[Live App](https://pitchiq2026.com) · [Developer Docs](docs/DEVELOPER_HANDOFF.md) · [Product Spec](docs/ai_world_cup_predictor_project_requirements.md)
+[Developer Docs](docs/DEVELOPER_HANDOFF.md) · [Product Spec](docs/ai_world_cup_predictor_project_requirements.md)
 
 </div>
 
@@ -20,9 +20,11 @@
 
 ## What is PitchIQ?
 
-PitchIQ is a full-stack World Cup prediction dashboard built for a company competition. It pulls live tournament data, runs a **Poisson-based match prediction model** blended with Bet365 market odds, and simulates the full 2026 bracket via **Monte Carlo** to produce title probabilities for all 48 teams.
+PitchIQ is a full-stack World Cup prediction dashboard. It pulls live tournament data, runs a **Poisson-based match prediction model** blended with Bet365 market odds, and simulates the full 2026 bracket via **Monte Carlo** to produce title probabilities for all 48 teams.
 
-Every morning a cron job refreshes fixtures, re-runs predictions with the latest Elo ratings and tournament stats, and updates Golden Boot projections. The result is a live, data-driven leaderboard your team can actually argue about.
+Every morning a cron job refreshes fixtures, re-runs predictions with the latest Elo ratings and tournament stats, and updates Golden Boot projections. The result is a live, data-driven dashboard you and your group can actually argue about.
+
+> **This is a template.** Click **Use this template** above to create your own instance. Point it at your own API keys and PocketBase instance — no accounts or sign-in required.
 
 <br />
 
@@ -34,7 +36,7 @@ Every morning a cron job refreshes fixtures, re-runs predictions with the latest
 | **AI reasoning** | GPT-4o-mini generates plain-English reasons and risk summaries per match · it's the only LLM call in the pipeline and handles a small text task, so `gpt-4o-mini` keeps token costs negligible |
 | **Tournament outlook** | 10,000-run Monte Carlo → title / top-4 / advance % for every team |
 | **Golden Boot** | Projected goals and win probability for top strikers |
-| **Picks tracker** | Track your tournament picks, accuracy %, streak, and points over time |
+| **Pick tracker** | Track your tournament picks, accuracy %, streak, and points over time |
 | **Injury news** | Severity-tagged alerts that feed directly into prediction penalties |
 | **Mobile-first** | Fully responsive — hamburger drawer on mobile, full sidebar on desktop |
 | **Auto-refresh** | 6am and 11:30am cron pipeline — no manual refresh needed |
@@ -174,6 +176,23 @@ npm run predict:today
 npm run dev
 ```
 
+### Personalise the Pick Tracker
+
+Set two optional env vars to brand the tracker with your name:
+
+```env
+NEXT_PUBLIC_TRACKER_OWNER_NAME=Alex
+NEXT_PUBLIC_TRACKER_OWNER_INITIALS=AJ
+```
+
+This changes the sidebar label to "Alex's Pick Tracker" and shows your initials in the header avatar. Leave blank for the generic "Pick Tracker".
+
+Once you've set your picks in `lib/data/seed.ts`, sync them to PocketBase:
+
+```bash
+npm run picks:sync
+```
+
 <br />
 
 ## npm scripts
@@ -203,6 +222,7 @@ npm run predict:top4      # Monte Carlo tournament simulation
 npm run predict:scorer    # Golden Boot projections
 
 # Picks
+npm run picks:sync        # Sync your tournament picks to PocketBase
 npm run grade:picks       # Recompute accuracy/points/streak
 ```
 
@@ -229,6 +249,10 @@ WORLD_CUP_SEASON=2026
 # Optional
 OPENAI_API_KEY=             # GPT-4o-mini reasoning enhancement
 ADMIN_REFRESH_TOKEN=        # Bearer auth for /api/refresh (required in production)
+
+# Pick Tracker branding
+NEXT_PUBLIC_TRACKER_OWNER_NAME=     # e.g. "Alex" → "Alex's Pick Tracker"
+NEXT_PUBLIC_TRACKER_OWNER_INITIALS= # e.g. "AJ"
 ```
 
 > **Never commit `.env`** — it is gitignored. All secrets live on the server only.
@@ -254,7 +278,7 @@ See [docs/DEVELOPER_HANDOFF.md](docs/DEVELOPER_HANDOFF.md) for the full producti
 ## Known limitations / future work
 
 - **Cape Verde Islands (CPV)** not yet in `lib/api-football/team-codes.ts` — 3 fixtures skipped on import
-- **User accounts / pick auth** — picks are currently open with no login (fine for a trusted company competition)
+- **User accounts / pick auth** — picks are currently open with no login (fine for a trusted group)
 - **Live match tracking** — excluded from MVP; all predictions are pre-match only
 - **Team code mapping** — some API-Football team IDs have known mismatches (AUT/SCO, SUI/AUS, etc.)
 
@@ -264,6 +288,6 @@ See [docs/DEVELOPER_HANDOFF.md](docs/DEVELOPER_HANDOFF.md) for the full producti
 
 <div align="center">
 
-Built for the FIFA World Cup 2026 · **PitchIQ** by Jack Bonner
+Built for the FIFA World Cup 2026 · **PitchIQ**
 
 </div>

@@ -2,7 +2,7 @@ import { basePath } from "@/lib/base-path";
 import { isPickLocked, resolvePick } from "@/features/picks/daily-picks";
 import type { DailyPick, DailyPickChoice } from "@/types/world-cup";
 
-const STORAGE_KEY = "jack-daily-picks-v1";
+const STORAGE_KEY = "user-daily-picks-v1";
 
 function readLocalPicks(): Record<string, DailyPick> {
   if (typeof window === "undefined") return {};
