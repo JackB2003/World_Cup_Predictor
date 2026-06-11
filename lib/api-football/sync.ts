@@ -347,12 +347,10 @@ export async function syncTeamStatisticsForToday(
 }
 
 async function clearInjuryNews(pb: Pb): Promise<void> {
-  const existingNews = await pb.collection(COLLECTIONS.news).getFullList();
-  for (const n of existingNews) {
-    if (n.type === "injury" || n.type === "suspension") {
-      await pb.collection(COLLECTIONS.news).delete(n.id);
-    }
-  }
+  const existingNews = await pb.collection(COLLECTIONS.news).getFullList({
+    filter: `icon = "${API_NEWS_ICON}"`,
+  });
+  for (const n of existingNews) await pb.collection(COLLECTIONS.news).delete(n.id);
 }
 
 async function writeInjuryNews(
