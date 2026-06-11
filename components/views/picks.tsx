@@ -100,7 +100,7 @@ function MatchCard({
       >
         <div className="flex items-center gap-2 mb-2.5">
           <Target size={14} className="text-(--accent-2)" />
-          <span className="section-tag">Jack&apos;s pick</span>
+          <span className="section-tag">Your pick</span>
           {locked && <span className="badge badge-dim text-[10px] ml-auto">Locked</span>}
           {!locked && !userPick && <span className="badge badge-warm text-[10px] ml-auto">Not set</span>}
           {!locked && userPick && <span className="badge badge-good text-[10px] ml-auto">Saved</span>}

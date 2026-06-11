@@ -1,6 +1,6 @@
 /**
- * Sync Jack's locked one-time tournament picks into PocketBase.
- * Run on the VPS: npm run picks:sync-jack
+ * Sync your locked one-time tournament picks into PocketBase.
+ * Edit SEED_DATA.userPicks in lib/data/seed.ts with your picks, then run: npm run picks:sync
  */
 import { ensureAdminAuth } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
@@ -24,10 +24,10 @@ async function main() {
 
   if (records[0]) {
     await pb.collection(COLLECTIONS.userPicks).update(records[0].id, payload);
-    console.log("Updated Jack's picks and reset pre-tournament stats:");
+    console.log("Updated picks and reset pre-tournament stats:");
   } else {
     await pb.collection(COLLECTIONS.userPicks).create(payload);
-    console.log("Created user_picks with Jack's picks:");
+    console.log("Created user_picks:");
   }
 
   for (const p of payload.top4) {
