@@ -50,7 +50,7 @@ export function Crest({ team, size = 36 }: { team?: Team; code?: string; size?: 
         borderRadius: Math.max(7, size * 0.24),
       }}
     >
-      <span className="relative z-[1]">{t.code}</span>
+      <span className="relative z-1">{t.code}</span>
     </div>
   );
 }
