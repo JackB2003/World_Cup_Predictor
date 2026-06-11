@@ -121,7 +121,7 @@ export function Sparkline({ data, w = 120, h = 36, color = "var(--accent)" }: { 
   const area = `${line} L ${w} ${h} L 0 ${h} Z`;
   const gid = `sg-${data.join("-")}`;
   return (
-    <svg width={w} height={h} className="block overflow-visible">
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="block overflow-visible max-w-full">
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.28" />

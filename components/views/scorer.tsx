@@ -7,17 +7,17 @@ import { CardHead, Crest, Delta, ProbBar, teamColor } from "@/components/ui/prim
 function ScorerRow({ s, data, rank, max }: { s: Scorer; data: WorldCupData; rank: number; max: number }) {
   const t = data.teamMap[s.team];
   return (
-    <div className="lift grid items-center gap-3 p-3 rounded-xl border border-(--line)" style={{ gridTemplateColumns: "30px 40px 1fr 120px 70px 44px" }}>
+    <div className="lift grid items-center gap-3 p-3 rounded-xl border border-(--line) [grid-template-columns:24px_36px_1fr_auto_auto] md:[grid-template-columns:30px_40px_1fr_120px_70px_44px]">
       <span className="num text-[22px]" style={{ color: rank === 1 ? "var(--accent)" : "var(--text-dim)" }}>{rank}</span>
       <Crest team={t} size={32} />
       <div className="min-w-0">
-        <div className="font-bold text-sm flex items-center gap-1.5">
-          {s.player}
-          {s.pens && <span className="badge badge-dim text-[10px] px-1.5 py-0">PK</span>}
+        <div className="font-bold text-sm flex items-center gap-1.5 min-w-0">
+          <span className="truncate">{s.player}</span>
+          {s.pens && <span className="badge badge-dim text-[10px] px-1.5 py-0 shrink-0">PK</span>}
         </div>
         <div className="text-(--text-dim) text-[11.5px] truncate">{s.note}</div>
       </div>
-      <div>
+      <div className="max-md:hidden">
         <ProbBar value={(s.prob / max) * 100} color={teamColor(t)} delay={rank * 40} />
         <div className="text-(--text-dim) text-[11px] mt-1 tabular-nums">Golden Boot {s.prob}%</div>
       </div>
@@ -47,7 +47,7 @@ export function ScorerView({ data }: { data: WorldCupData }) {
 
   return (
     <div className="fade-in grid gap-[18px]">
-      <div className="grid gap-[18px]" style={{ gridTemplateColumns: "minmax(280px, 360px) 1fr" }}>
+      <div className="grid gap-[18px] grid-cols-1 md:[grid-template-columns:minmax(280px,360px)_1fr]">
         <div className="card p-5 relative overflow-hidden" style={{ background: "linear-gradient(150deg, var(--surface-2), var(--surface))" }}>
           <div className="section-tag">AI projected Golden Boot</div>
           <div className="flex items-center gap-4 mt-4">
@@ -76,7 +76,7 @@ export function ScorerView({ data }: { data: WorldCupData }) {
 
         <div className="card p-5">
           <CardHead icon={<Sparkles size={17} />} tag="Top-scorer formula" title={`Why ${leader.player.split(" ").pop()} leads the model`} />
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {tiles.map((b) => (
               <div key={b.k} className="bg-(--surface-2) rounded-xl p-3.5">
                 <div className="section-tag">{b.k}</div>

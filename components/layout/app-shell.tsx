@@ -121,7 +121,7 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
         </div>
       </aside>
 
-      <main className="overflow-y-auto h-screen">
+      <main className="overflow-y-auto overflow-x-hidden h-screen min-w-0">
         <header className="sticky top-0 z-30 flex items-center gap-4 px-7 py-4 backdrop-blur-md bg-[rgba(7,9,15,0.85)] max-md:px-4 max-md:gap-3">
           <button
             aria-label="Open menu"
