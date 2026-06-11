@@ -2,13 +2,13 @@
 
 **Product name:** PitchIQ  
 **Repository:** [JackB2003/World_Cup_Predictor](https://github.com/JackB2003/World_Cup_Predictor)  
-**Production URL:** `https://jackhost.shop/world-cup`  
+**Production URL:** `https://pitchiq2026.com`  
 **Last updated:** June 2026
 
 This document is the primary onboarding guide for developers joining the project. It explains what was built, how it works, and how to run, extend, and deploy it.
 
 For the original product spec, see [`ai_world_cup_predictor_project_requirements.md`](./ai_world_cup_predictor_project_requirements.md).  
-For VPS/IT operations, see [`IT_SPECIALIST_POST_BUILD_HANDOFF.md`](./IT_SPECIALIST_POST_BUILD_HANDOFF.md) and [`VPS_SETUP_BRIEF.md`](./VPS_SETUP_BRIEF.md).
+For UI/UX reference, see [`design/README.md`](../design/README.md).
 
 ---
 
@@ -57,9 +57,9 @@ PitchIQ is an AI-assisted FIFA World Cup 2026 prediction dashboard built for a c
 
 ### Hosting model
 
-- **Next.js app** — PM2 process on Ubuntu VPS, proxied by Nginx at `/world-cup`
+- **Next.js app** — PM2 process on Ubuntu VPS, proxied by Nginx at the root path
 - **PocketBase** — separate PM2 process on `127.0.0.1:8090` (not restarted on app deploys)
-- **CI/CD** — GitHub Actions SSH deploy on push to `main`
+- **CI/CD** — GitHub Actions self-hosted runner on push to `main`
 
 ---
 
@@ -149,8 +149,7 @@ Configured in `.fallowrc.json`. `design/` and `fixtures/` are excluded from audi
 | Reverse proxy | Nginx | VPS |
 | Code quality | Fallow | PR checks only |
 
-**Build output:** `output: "standalone"` in `next.config.ts` for VPS deployment.  
-**URL base path:** `/world-cup` — all routes and assets are prefixed.
+**Build output:** `output: "standalone"` in `next.config.ts` for VPS deployment.
 
 ---
 
@@ -200,16 +199,16 @@ World_Cup_Predictor/
 │   ├── api-football/client.ts    # API-Football with mock/cache/rate limits
 │   ├── openai/reasoning.ts       # Optional GPT reasoning enhancement
 │   ├── scripts/fallback.ts       # PB-unavailable fallback for scripts
-│   ├── base-path.ts              # Must match next.config.ts basePath
+│   ├── base-path.ts              # basePath constant (currently empty string)
 │   └── utils.ts
 │
 ├── scripts/                      # CLI jobs (run via npm scripts + tsx)
 ├── types/world-cup.ts            # Shared TypeScript interfaces
 ├── design/                       # Original HTML/React prototype (reference only)
 ├── fixtures/api-football/        # Mock API-Football JSON responses
-├── docs/                         # Requirements, IT handoff, this document
+├── docs/                         # Requirements and this document
 └── .github/workflows/
-    ├── deploy.yml                # Push to main → VPS deploy
+    ├── deploy.yml                # Push to main → VPS deploy (self-hosted runner)
     └── fallow.yml                # PR code-quality audit
 ```
 
@@ -414,7 +413,7 @@ Live responses are cached in the `api_cache` PocketBase collection:
 - **Daily limit:** 100 requests
 - **Warn threshold:** 95 — throws before making a new request
 - Each live request logged to `api_request_logs`
-- Usage exposed via `GET /world-cup/api/health` and `GET /world-cup/api/refresh`
+- Usage exposed via `GET /api/health`
 
 #### Wrapped endpoints
 
@@ -439,7 +438,7 @@ Live responses are cached in the `api_cache` PocketBase collection:
 
 | Script | File | Purpose |
 |--------|------|---------|
-| `dev` | — | `next dev` → `http://localhost:3000/world-cup` |
+| `dev` | — | `next dev` → `http://localhost:3000` |
 | `build` | — | Production build (standalone output) |
 | `start` | — | `next start` (production) |
 | `lint` | — | ESLint |
@@ -486,9 +485,9 @@ Logs: `/var/log/world-cup-refresh.log`
 
 ### Manual refresh from UI
 
-The Refresh button in `AppShell` calls `POST /world-cup/api/refresh` with `{ confirm: true }`, which spawns `npm run refresh:morning` via `child_process.exec` (120s timeout).
+The Refresh button in `AppShell` calls `POST /api/refresh` with `{ confirm: true }`, which spawns `npm run refresh:morning` via `child_process.exec` (120s timeout).
 
-Protected by optional `ADMIN_REFRESH_TOKEN` (Bearer auth). If unset, the endpoint is unauthenticated.
+Protected by `ADMIN_REFRESH_TOKEN` (Bearer auth). In production, the endpoint returns 401 if the token is missing or incorrect.
 
 ---
 
@@ -496,17 +495,17 @@ Protected by optional `ADMIN_REFRESH_TOKEN` (Bearer auth). If unset, the endpoin
 
 ### Routing
 
-All pages live under the `(dashboard)` route group. With `basePath: "/world-cup"`:
+All pages live under the `(dashboard)` route group. The app is served at the domain root (no basePath):
 
 | Page | URL | View component |
 |------|-----|----------------|
-| Home | `/world-cup` | Redirects to `/world-cup/overview` |
-| Overview | `/world-cup/overview` | `OverviewView` |
-| Picks | `/world-cup/picks` | `PicksView` |
-| Outlook | `/world-cup/outlook` | `OutlookView` |
-| Scorer | `/world-cup/scorer` | `ScorerView` |
-| News | `/world-cup/news` | `NewsView` |
-| Tracker | `/world-cup/tracker` | `TrackerView` |
+| Home | `/` | Redirects to `/overview` |
+| Overview | `/overview` | `OverviewView` |
+| Picks | `/picks` | `PicksView` |
+| Outlook | `/outlook` | `OutlookView` |
+| Scorer | `/scorer` | `ScorerView` |
+| News | `/news` | `NewsView` |
+| Tracker | `/tracker` | `TrackerView` |
 
 ### Rendering model
 
@@ -521,15 +520,13 @@ All pages live under the `(dashboard)` route group. With `basePath: "/world-cup"
 - `app/globals.css` — CSS custom properties / design tokens
 - `components/ui/primitives.tsx` — shared UI atoms (Crest, ProbBar, FormRow, etc.)
 
-### basePath handling
+### basePath
 
-`lib/base-path.ts` exports `basePath = "/world-cup"`. This **must** match `next.config.ts`. Used by client-side fetch calls (e.g. refresh button).
+`lib/base-path.ts` exports `basePath = ""`. The app is served at the domain root. Only relevant for client-side fetch calls inside the app.
 
 ---
 
 ## 11. API routes
-
-All API routes are prefixed with `/world-cup` in production.
 
 | Route | Methods | Purpose |
 |-------|---------|---------|
@@ -542,7 +539,7 @@ All API routes are prefixed with `/world-cup` in production.
 **Health check example:**
 
 ```bash
-curl -s http://127.0.0.1:3000/world-cup/api/health
+curl -s http://127.0.0.1:3000/api/health
 # {"status":"ok","timestamp":"...","apiFootball":{"used":0,"limit":100}}
 ```
 
@@ -568,7 +565,7 @@ The `design/` folder is the **original PitchIQ HTML/React prototype**. It is ref
 
 ## 13. Environment variables
 
-Copy `.env.example` to `.env` for local development. On the VPS, the file lives at `/var/www/world-cup-predictor/.env` (mode `600`, never commit).
+Copy `.env.example` to `.env` for local development. On the VPS, `.env` lives in the app directory (mode `600`, never commit).
 
 | Variable | Required | Default | Purpose |
 |----------|----------|---------|---------|
@@ -582,17 +579,8 @@ Copy `.env.example` to `.env` for local development. On the VPS, the file lives 
 | `WORLD_CUP_LEAGUE_ID` | No | `1` | League ID for imports |
 | `WORLD_CUP_SEASON` | No | `2026` | Season year |
 | `OPENAI_API_KEY` | No | — | Optional reasoning enhancement |
-| `ADMIN_REFRESH_TOKEN` | No | — | Bearer token for `POST /api/refresh` |
+| `ADMIN_REFRESH_TOKEN` | Production | — | Bearer token for `POST /api/refresh` (required in production) |
 | `USE_SEED_DATA` | No | — | Force in-memory seed; skip PocketBase entirely |
-
-**Deploy shell variables** (not in app `.env`):
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `DEPLOY_PATH` | `/var/www/world-cup-predictor` | Deploy script working directory |
-| `PM2_APP_NAME` | `world-cup-predictor` | PM2 process name |
-
-**GitHub Actions secrets:** `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT`, `DEPLOY_PATH`, `PM2_APP_NAME`
 
 After any `.env` change on the VPS:
 
@@ -620,7 +608,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open: `http://localhost:3000/world-cup/overview`
+Open: `http://localhost:3000/overview`
 
 ### Full local stack (with PocketBase)
 
@@ -680,26 +668,27 @@ Fallow also runs automatically on pull requests via GitHub Actions.
 
 ### Infrastructure
 
-| Component | Path / detail |
-|-----------|---------------|
+| Component | Detail |
+|-----------|--------|
 | App code | `/var/www/world-cup-predictor` |
 | PocketBase data | `/var/www/pocketbase/pb_data/` |
-| PM2 app process | `world-cup-predictor` → `npm start` on port 3000 |
+| PM2 app process | `world-cup-predictor` → standalone server on port 3000 |
 | PM2 PB process | `pocketbase` → `127.0.0.1:8090` |
-| Nginx | Proxies `/world-cup` → `127.0.0.1:3000` |
-| Public URL | `https://jackhost.shop/world-cup` |
+| Nginx | Proxies root → `127.0.0.1:3000` |
+| Public URL | `https://pitchiq2026.com` |
 
 ### Deploy flow
 
-Push to `main` triggers `.github/workflows/deploy.yml`:
+Push to `main` triggers `.github/workflows/deploy.yml` via a **self-hosted runner** on the VPS:
 
 ```
-GitHub Actions (SSH)
-  → cd $DEPLOY_PATH
+GitHub Actions (self-hosted runner)
+  → cd /var/www/world-cup-predictor
+  → git fetch origin main && git reset --hard origin/main
   → bash scripts/deploy.sh
-      git pull origin main
       npm ci
       npm run build
+      cp -r .next/static .next/standalone/.next/static
       pm2 restart world-cup-predictor
 ```
 
@@ -726,10 +715,10 @@ pm2 restart world-cup-predictor
 
 ### Nginx configuration
 
-The app uses `basePath: "/world-cup"`. Nginx must proxy the subpath:
+Nginx proxies the domain root to the Next.js process:
 
 ```nginx
-location /world-cup {
+location / {
     proxy_pass http://127.0.0.1:3000;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
@@ -743,8 +732,8 @@ location /world-cup {
 
 ```bash
 pm2 list
-curl -s http://127.0.0.1:3000/world-cup/api/health
-curl -sI https://jackhost.shop/world-cup/overview
+curl -s http://127.0.0.1:3000/api/health
+curl -sI https://pitchiq2026.com/overview
 ```
 
 ### Go-live checklist
@@ -755,9 +744,8 @@ curl -sI https://jackhost.shop/world-cup/overview
 - [ ] `import:api-football` and prediction scripts run successfully
 - [ ] Cron jobs installed from `scripts/cron.example`
 - [ ] PocketBase backup cron active; `/var/backups/` has space
-- [ ] `ADMIN_REFRESH_TOKEN` set before exposing refresh endpoint publicly
+- [ ] `ADMIN_REFRESH_TOKEN` set in `.env`
 - [ ] Domain DNS + SSL configured
-- [ ] GitHub Actions SSH key rotated after first successful deploy
 
 ---
 
@@ -767,7 +755,7 @@ curl -sI https://jackhost.shop/world-cup/overview
 
 The most common production issue. Two bugs caused this in production (June 2026):
 
-1. **`user_picks` sort on a view collection** — `user_picks` is a PocketBase view (no `created` field). `getFullList({ sort: "-created" })` returns HTTP 400, which hit the silent `catch` in `fetchWorldCupData()` and always returned `SEED_DATA`. Fix: use `getFullList()` with no sort on `userPicks`.
+1. **`user_picks` sort on a view collection** — `user_picks` is a PocketBase view (no `created` field). `getFullList({ sort: "-created" })` returns HTTP 400, which hit the silent `catch` in `fetchWorldCupData()` and always returned `SEED_DATA`. Fix: use `getFullList({ sort: "id" })` on `userPicks`.
 2. **Static pre-render at build time** — Dashboard layout and `/api/world-cup` lacked `export const dynamic = "force-dynamic"`, so Next.js 15 baked seed HTML into the build. Fix: add `force-dynamic` to `app/(dashboard)/layout.tsx` and `app/api/world-cup/route.ts`.
 
 The catch block now logs `[fetchWorldCupData] PocketBase fetch failed...` to server logs instead of failing silently.
@@ -801,14 +789,10 @@ If data still looks wrong after those fixes, check in order:
 
 5. **Check for seed fingerprint in API response:**
    ```bash
-   curl -s http://127.0.0.1:3000/world-cup/api/world-cup | grep lastUpdate
+   curl -s http://127.0.0.1:3000/api/world-cup | grep lastUpdate
    # "7:02 AM" = still showing hardcoded seed data
    # Match IDs "m1", "m2" = seed; "af-12345" = API-Football import
    ```
-
-### `/api/health` returns 404
-
-Use the full basePath: `/world-cup/api/health`, not `/api/health`.
 
 ### Scripts fail with auth errors
 
@@ -816,11 +800,7 @@ Ensure `POCKETBASE_ADMIN_EMAIL` and `POCKETBASE_ADMIN_PASSWORD` are set in `.env
 
 ### API-Football rate limit hit
 
-Check usage: `curl -s http://127.0.0.1:3000/world-cup/api/health`. Daily limit is 100 requests. Review `api_request_logs` in PocketBase admin.
-
-### Deploy fails
-
-See [`IT_SPECIALIST_POST_BUILD_HANDOFF.md`](./IT_SPECIALIST_POST_BUILD_HANDOFF.md) for SSH key setup and GitHub Actions secrets.
+Check usage: `curl -s http://127.0.0.1:3000/api/health`. Daily limit is 100 requests. Review `api_request_logs` in PocketBase admin.
 
 ---
 
@@ -835,7 +815,6 @@ These are intentional MVP limitations or incomplete wiring:
 | **News ingestion** | News only from seed data | Integrate injuries API + manual news pipeline |
 | **Silent seed fallback** | No UI indicator when showing mock data | Add `dataSource` to `/api/health` |
 | **grade:picks not cronned** | Manual run only | Add post-match cron once results import exists |
-| **Refresh endpoint auth** | Unauthenticated if `ADMIN_REFRESH_TOKEN` unset | Set token before go-live |
 | **User accounts** | Single demo `user_picks` record | Out of MVP scope |
 | **Live match features** | Excluded from MVP | See requirements doc |
 
@@ -849,7 +828,7 @@ These are intentional MVP limitations or incomplete wiring:
 2. `types/world-cup.ts` — data contracts
 3. `features/predictions/match-engine.ts` — match prediction logic
 4. `scripts/morning-refresh.ts` — daily pipeline
-5. `next.config.ts` — basePath and standalone output
+5. `next.config.ts` — standalone output and security headers
 6. `components/layout/app-shell.tsx` — app shell and navigation
 
 ### Common commands
@@ -877,9 +856,6 @@ bash scripts/deploy.sh
 |----------|----------|---------|
 | `DEVELOPER_HANDOFF.md` (this file) | Developers | Architecture, code, workflows |
 | `ai_world_cup_predictor_project_requirements.md` | Product / dev | Full spec and data model |
-| `IT_SPECIALIST_POST_BUILD_HANDOFF.md` | IT / ops | VPS setup, env, cron, SSH |
-| `IT_SPECIALIST_REMAINING_TASKS.md` | IT / ops | Outstanding infra tasks |
-| `VPS_SETUP_BRIEF.md` | IT / ops | Initial server provisioning |
 | `design/README.md` | Design / frontend | UI tokens, layout, interactions |
 | `.env.example` | All | Environment variable template |
 
