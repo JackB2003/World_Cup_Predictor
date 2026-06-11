@@ -9,7 +9,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  basePath: "/world-cup",
   async headers() {
     return [
       {
