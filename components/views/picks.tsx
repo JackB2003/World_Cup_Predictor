@@ -72,10 +72,10 @@ function MatchCard({
       </div>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0">
           <Crest team={home} size={42} />
-          <div>
-            <div className="font-bold text-[14.5px]">{home.name}</div>
+          <div className="min-w-0">
+            <div className="font-bold text-[14.5px] truncate">{home.name}</div>
             <div className="text-(--text-dim) text-[11.5px]">Elo {home.elo}</div>
           </div>
         </div>
@@ -85,9 +85,9 @@ function MatchCard({
           </div>
           <div className="section-tag mt-0.5">Predicted</div>
         </div>
-        <div className="flex items-center gap-2.5 justify-end">
-          <div className="text-right">
-            <div className="font-bold text-[14.5px]">{away.name}</div>
+        <div className="flex items-center gap-2.5 justify-end min-w-0">
+          <div className="text-right min-w-0">
+            <div className="font-bold text-[14.5px] truncate">{away.name}</div>
             <div className="text-(--text-dim) text-[11.5px]">Elo {away.elo}</div>
           </div>
           <Crest team={away} size={42} />
@@ -260,7 +260,7 @@ export function PicksView({ data }: { data: WorldCupData }) {
           <div className="text-(--text-dim) text-[12.5px]">Check back after the morning refresh when fixtures are loaded.</div>
         </div>
       ) : (
-        <div className="grid gap-[18px] stagger" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))" }}>
+        <div className="grid gap-[18px] stagger grid-cols-1 md:[grid-template-columns:repeat(auto-fill,minmax(420px,1fr))]">
           {shown.map((m) => (
             <MatchCard
               key={m.id}

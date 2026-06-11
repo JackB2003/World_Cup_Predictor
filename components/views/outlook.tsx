@@ -23,8 +23,8 @@ function PowerRow({ t, rank }: { t: Team; rank: number }) {
       <span className="num w-[26px] text-[22px]" style={{ color: rank <= 3 ? "var(--accent)" : "var(--text-dim)" }}>{rank}</span>
       <Crest team={t} size={32} />
       <div className="flex-1 min-w-0">
-        <div className="font-bold text-sm">{t.name}</div>
-        <div className="text-(--text-dim) text-[11.5px]">{t.conf}</div>
+        <div className="font-bold text-sm truncate">{t.name}</div>
+        <div className="text-(--text-dim) text-[11.5px] truncate">{t.conf}</div>
       </div>
       <FormRow form={t.form} />
       <div className="text-right w-14">
@@ -43,7 +43,7 @@ export function OutlookView({ data }: { data: WorldCupData }) {
   const medals = ["#FFD24A", "#C7CEDB", "#E08A4A", "#7E8AA0"];
 
   return (
-    <div className="fade-in grid gap-[18px]" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
+    <div className="fade-in grid gap-[18px] grid-cols-1 md:grid-cols-[1.5fr_1fr]">
       <div className="card p-5">
         <CardHead icon={<Trophy size={17} />} tag="Monte Carlo · 10,000 simulations" title="Championship Probability" />
         <div className="flex flex-col gap-3">

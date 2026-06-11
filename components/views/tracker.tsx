@@ -44,7 +44,7 @@ export function TrackerView({ data }: { data: WorldCupData }) {
     <div className="fade-in grid gap-[18px]">
       <PerformanceStats accuracy={u.accuracy} streak={u.streak} hits={hits} misses={misses} />
 
-      <div className="grid gap-[18px]" style={{ gridTemplateColumns: "1.2fr 1fr" }}>
+      <div className="grid gap-[18px] grid-cols-1 md:grid-cols-[1.2fr_1fr]">
         <DailyPicksSection
           accuracy={u.accuracy}
           accuracyTrend={u.accuracyTrend}

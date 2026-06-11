@@ -32,7 +32,7 @@ export function DailyPicksSection({
           <div className="num text-[48px] text-(--accent) leading-[0.9]">
             {accuracy}<span className="text-[22px]">%</span>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0 overflow-hidden">
             <Sparkline data={accuracyTrend} w={220} h={56} />
           </div>
         </div>

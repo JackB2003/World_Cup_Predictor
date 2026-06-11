@@ -13,7 +13,7 @@ export function PerformanceStats({ accuracy, streak, hits, misses }: Performance
   const totalGraded = hits + misses;
 
   return (
-    <div className="grid gap-[18px]" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+    <div className="grid gap-[18px] grid-cols-3">
       <div className="card p-5 lift">
         <div className="section-tag">Pick accuracy</div>
         <div className="num text-[42px] mt-1 text-(--accent)">
