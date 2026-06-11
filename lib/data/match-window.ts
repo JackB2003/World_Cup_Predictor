@@ -13,18 +13,6 @@ export function selectUpcomingWindow<T extends KickoffRecord>(matches: T[]): T[]
   });
 }
 
-/** Earliest fixture kickoff — used for the tournament countdown. */
-export function resolveTournamentKickoff(
-  matches: KickoffRecord[],
-  fallback: string,
-): string {
-  const kickoffs = matches
-    .map((m) => m.kickoffAt)
-    .filter((ko): ko is string => Boolean(ko))
-    .sort();
-  return kickoffs[0] ?? fallback;
-}
-
 /** Window matches, or the next five future matches when the window is empty. */
 export function selectDisplayMatches(matches: Match[]): Match[] {
   const upcoming = selectUpcomingWindow(matches);

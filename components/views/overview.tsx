@@ -7,32 +7,41 @@ import { CardHead, Crest, ProbBar, TriBar, teamColor } from "@/components/ui/pri
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+type TimeLeft = { d: number; h: number; m: number; s: number };
+
 function Countdown({ to }: { to: string }) {
-  const calc = () => {
-    const diff = Math.max(0, new Date(to).getTime() - Date.now());
-    return {
-      d: Math.floor(diff / 86400000),
-      h: Math.floor((diff / 3600000) % 24),
-      m: Math.floor((diff / 60000) % 60),
-      s: Math.floor((diff / 1000) % 60),
-    };
-  };
-  const [t, setT] = useState(calc);
+  // Start as null so server and first client render match (no hydration
+  // mismatch). The real values are computed on the client after mount, which
+  // also guarantees the interval drives a live, ticking countdown.
+  const [t, setT] = useState<TimeLeft | null>(null);
+
   useEffect(() => {
+    const calc = (): TimeLeft => {
+      const diff = Math.max(0, new Date(to).getTime() - Date.now());
+      return {
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff / 3600000) % 24),
+        m: Math.floor((diff / 60000) % 60),
+        s: Math.floor((diff / 1000) % 60),
+      };
+    };
+    setT(calc());
     const id = setInterval(() => setT(calc()), 1000);
     return () => clearInterval(id);
   }, [to]);
 
-  const Box = ({ v, l }: { v: number; l: string }) => (
+  const Box = ({ v, l }: { v: number | null; l: string }) => (
     <div className="text-center">
-      <div className="num text-[38px] leading-[0.9] text-[#07090F]">{String(v).padStart(2, "0")}</div>
+      <div className="num text-[38px] leading-[0.9] text-[#07090F]" suppressHydrationWarning>
+        {v === null ? "––" : String(v).padStart(2, "0")}
+      </div>
       <div className="text-[9.5px] tracking-[0.16em] uppercase font-extrabold text-[rgba(7,9,15,0.65)] mt-0.5">{l}</div>
     </div>
   );
 
   return (
     <div className="flex gap-4">
-      <Box v={t.d} l="Days" /><Box v={t.h} l="Hrs" /><Box v={t.m} l="Min" /><Box v={t.s} l="Sec" />
+      <Box v={t?.d ?? null} l="Days" /><Box v={t?.h ?? null} l="Hrs" /><Box v={t?.m ?? null} l="Min" /><Box v={t?.s ?? null} l="Sec" />
     </div>
   );
 }
