@@ -63,10 +63,10 @@ export function OverviewView({ data }: { data: WorldCupData }) {
   return (
     <div className="fade-in grid gap-[18px] grid-cols-1 md:grid-cols-[1.5fr_1fr]">
       <div className="card col-span-full overflow-hidden p-0 text-[#07090F]" style={{ background: "linear-gradient(110deg, var(--accent), #9be63a 60%, var(--accent-3))" }}>
-        <div className="flex items-center gap-7 p-7 relative flex-wrap max-md:gap-4 max-md:p-5">
+        <div className="flex items-center gap-7 p-7 relative flex-wrap max-md:gap-4 max-md:p-5 max-md:justify-center">
           <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "repeating-linear-gradient(135deg, #07090F 0 2px, transparent 2px 22px)" }} />
-          <div className="relative flex-1 min-w-[180px] max-md:min-w-full">
-            <div className="flex items-center gap-2 text-[11.5px] font-extrabold tracking-[0.14em] uppercase">
+          <div className="relative flex-1 min-w-[180px] max-md:min-w-full max-md:text-center">
+            <div className="flex items-center gap-2 text-[11.5px] font-extrabold tracking-[0.14em] uppercase max-md:justify-center">
               <Flag size={14} /> {data.meta.hosts}
             </div>
             <div className="display text-[40px] leading-none my-2">Kickoff in</div>
@@ -75,7 +75,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
             </div>
           </div>
           <div className="relative"><Countdown to={data.meta.kickoff} /></div>
-          <div className="relative border-l border-[rgba(7,9,15,0.2)] pl-7 max-md:pl-5">
+          <div className="relative border-l border-[rgba(7,9,15,0.2)] pl-7 max-md:pl-5 max-md:text-center">
             <div className="num text-[52px] leading-[0.85]">{data.meta.matchesToday}</div>
             <div className="text-[10.5px] font-extrabold tracking-[0.14em] uppercase opacity-70">Matches today</div>
             <Link href="/picks" className="mt-3 inline-flex items-center gap-1.5 bg-[#07090F] text-(--accent) px-3.5 py-2 rounded-[10px] text-xs font-bold">
