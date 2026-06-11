@@ -1,7 +1,7 @@
 import { getPublicPocketBase } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
 import { SEED_DATA, TOURNAMENT_KICKOFF_ISO } from "@/lib/data/seed";
-import { selectDisplayMatches, selectUpcomingWindow } from "@/lib/data/match-window";
+import { selectDisplayMatches, selectTodayMatches } from "@/lib/data/match-window";
 import {
   buildTeamMap,
   mapMatchesFromPb,
@@ -42,7 +42,7 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
     const scorers = mapScorersFromPb(scorersRaw);
     const userPicks = mapUserPicksFromPb(userPicksRaw);
     const { meta, modelWeights } = mapMetaFromPb(metaRaw, weightsRaw);
-    const todayMatches = selectUpcomingWindow(matches);
+    const todayMatches = selectTodayMatches(matches);
 
     return {
       teams,

@@ -14,7 +14,7 @@ export function formatKickoffTime(iso?: string, fallback = "TBD"): string {
   });
 }
 
-function chicagoDateStr(d: Date): string {
+export function chicagoDateStr(d: Date): string {
   return d.toLocaleDateString("en-CA", { timeZone: TZ }); // "YYYY-MM-DD"
 }
 
