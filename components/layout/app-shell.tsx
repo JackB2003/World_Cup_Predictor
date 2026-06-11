@@ -109,7 +109,7 @@ export function AppShell({ data, children }: { data: WorldCupData; children: Rea
             Updated <LocalTime iso={data.meta.lastUpdateAt} fallback={data.meta.lastUpdate} />
             <span className="text-(--text-dim) font-semibold">· next {data.meta.nextRefresh}</span>
           </div>
-          <div className="w-9 h-9 rounded-[11px] bg-linear-to-br from-(--accent) to-(--accent-3) grid place-items-center text-[#07090F] font-extrabold text-sm display">AM</div>
+          <div className="w-9 h-9 rounded-[11px] bg-linear-to-br from-(--accent) to-(--accent-3) grid place-items-center text-[#07090F] font-extrabold text-sm display">JB</div>
         </header>
         <div className="px-7 pb-12 pt-1">{children}</div>
       </main>
