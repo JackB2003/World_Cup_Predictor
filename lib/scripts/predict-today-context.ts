@@ -168,7 +168,7 @@ export async function updateDashboardMeta(pb: Awaited<ReturnType<typeof ensureAd
   await pb.collection(COLLECTIONS.meta).update(metaRecords[0].id, {
     value: {
       ...value,
-      lastUpdate: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+      lastUpdate: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" }),
       lastUpdateAt: new Date().toISOString(),
       matchesToday,
     },

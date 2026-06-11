@@ -118,10 +118,13 @@ const modelWeights = [
   { factor: "AI News Analysis", weight: 5, color: "#38E08A" },
 ];
 
+// Opening match (Mexico vs South Africa) — 13:00 Mexico City = 19:00 UTC.
+export const TOURNAMENT_KICKOFF_ISO = "2026-06-11T19:00:00.000Z";
+
 const meta = {
   tournament: "FIFA World Cup 2026",
   hosts: "USA · Canada · Mexico",
-  kickoff: "2026-06-11T19:00:00.000Z",
+  kickoff: TOURNAMENT_KICKOFF_ISO,
   simRuns: 10000,
   lastUpdate: "7:02 AM",
   nextRefresh: "4:00 PM",

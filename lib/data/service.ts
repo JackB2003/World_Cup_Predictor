@@ -1,7 +1,7 @@
 import { getPublicPocketBase } from "@/lib/pocketbase/admin";
 import { COLLECTIONS } from "@/lib/pocketbase/collections";
-import { SEED_DATA } from "@/lib/data/seed";
-import { selectDisplayMatches, selectUpcomingWindow, resolveTournamentKickoff } from "@/lib/data/match-window";
+import { SEED_DATA, TOURNAMENT_KICKOFF_ISO } from "@/lib/data/seed";
+import { selectDisplayMatches, selectUpcomingWindow } from "@/lib/data/match-window";
 import {
   buildTeamMap,
   mapMatchesFromPb,
@@ -54,7 +54,7 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
       modelWeights,
       meta: {
         ...meta,
-        kickoff: resolveTournamentKickoff(matches, meta.kickoff),
+        kickoff: TOURNAMENT_KICKOFF_ISO,
         matchesToday: todayMatches.length || meta.matchesToday,
       },
     };
