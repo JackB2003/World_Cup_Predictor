@@ -31,7 +31,7 @@ Every morning a cron job refreshes fixtures, re-runs predictions with the latest
 | | |
 |---|---|
 | **Match predictions** | Poisson model · Bet365 odds blend · Elo gap · form · rest days · H2H |
-| **AI reasoning** | GPT-4o-mini generates plain-English reasons and risk summaries per match |
+| **AI reasoning** | GPT-4o-mini generates plain-English reasons and risk summaries per match · it's the only LLM call in the pipeline and handles a small text task, so `gpt-4o-mini` keeps token costs negligible |
 | **Tournament outlook** | 10,000-run Monte Carlo → title / top-4 / advance % for every team |
 | **Golden Boot** | Projected goals and win probability for top strikers |
 | **Picks tracker** | Track your tournament picks, accuracy %, streak, and points over time |
@@ -68,7 +68,7 @@ Every morning a cron job refreshes fixtures, re-runs predictions with the latest
 | Database | PocketBase 0.39 |
 | Prediction model | Poisson distribution + Monte Carlo simulation |
 | External data | API-Football (fixtures/odds), eloratings.net (Elo) |
-| AI reasoning | OpenAI `gpt-4o-mini` |
+| AI reasoning | OpenAI `gpt-4o-mini` — reasoning-only call; the Poisson model does the heavy lifting |
 | Process manager | PM2 |
 | Reverse proxy | Nginx + Let's Encrypt SSL |
 
