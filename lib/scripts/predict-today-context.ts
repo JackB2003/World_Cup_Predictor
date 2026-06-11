@@ -160,6 +160,20 @@ export async function upsertPrediction(
   }
 }
 
+function getNextRefreshTime(): string {
+  const now = new Date();
+  const todayMorning = new Date(now);
+  todayMorning.setUTCHours(6, 0, 0, 0);
+  const todayPrematch = new Date(now);
+  todayPrematch.setUTCHours(11, 30, 0, 0);
+  const tomorrowMorning = new Date(now);
+  tomorrowMorning.setUTCDate(tomorrowMorning.getUTCDate() + 1);
+  tomorrowMorning.setUTCHours(6, 0, 0, 0);
+
+  const next = now < todayMorning ? todayMorning : now < todayPrematch ? todayPrematch : tomorrowMorning;
+  return next.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" });
+}
+
 export async function updateDashboardMeta(pb: Awaited<ReturnType<typeof ensureAdminAuth>>, matchesToday: number): Promise<void> {
   const metaRecords = await pb.collection(COLLECTIONS.meta).getFullList({ filter: 'key = "dashboard"' });
   if (!metaRecords[0]) return;
@@ -171,6 +185,7 @@ export async function updateDashboardMeta(pb: Awaited<ReturnType<typeof ensureAd
       lastUpdate: new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/Chicago" }),
       lastUpdateAt: new Date().toISOString(),
       matchesToday,
+      nextRefresh: getNextRefreshTime(),
     },
   });
 }
