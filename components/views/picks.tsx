@@ -28,10 +28,10 @@ function PickButton({
       }}
       className={`px-3 py-1.5 rounded-lg text-[12px] font-bold border transition-colors ${
         active
-          ? "bg-[var(--accent)] text-[#07090F] border-[var(--accent)]"
+          ? "bg-(--accent) text-[#07090F] border-(--accent)"
           : disabled
-            ? "bg-[var(--surface-2)] text-[var(--text-dim)] border-[var(--line)] cursor-not-allowed opacity-60"
-            : "bg-[var(--surface-2)] text-[var(--text-mid)] border-[var(--line)] hover:border-[var(--accent)] hover:text-[var(--text)]"
+            ? "bg-(--surface-2) text-(--text-dim) border-(--line) cursor-not-allowed opacity-60"
+            : "bg-(--surface-2) text-(--text-mid) border-(--line) hover:border-(--accent) hover:text-(--text)"
       }`}
     >
       {children}
@@ -67,7 +67,7 @@ function MatchCard({
     <div className={`card lift p-[18px] cursor-pointer ${expanded ? "is-open" : ""}`} onClick={onToggle}>
       <div className="flex items-center gap-2.5 mb-3.5">
         <span className="section-tag">{m.stage}</span>
-        <span className="text-[var(--text-dim)] text-xs flex items-center gap-1"><Clock size={12} /> <LocalTime iso={m.kickoffAt} fallback={m.time} /></span>
+        <span className="text-(--text-dim) text-xs flex items-center gap-1"><Clock size={12} /> <LocalTime iso={m.kickoffAt} fallback={m.time} /></span>
         <span className={`badge ${badgeCls} ml-auto`}>{m.tag}</span>
       </div>
 
@@ -76,30 +76,30 @@ function MatchCard({
           <Crest team={home} size={42} />
           <div>
             <div className="font-bold text-[14.5px]">{home.name}</div>
-            <div className="text-[var(--text-dim)] text-[11.5px]">Elo {home.elo}</div>
+            <div className="text-(--text-dim) text-[11.5px]">Elo {home.elo}</div>
           </div>
         </div>
         <div className="text-center">
           <div className="num text-[40px] leading-[0.9] whitespace-nowrap">
-            {m.score[0]}<span className="text-[var(--text-dim)] mx-1.5">–</span>{m.score[1]}
+            {m.score[0]}<span className="text-(--text-dim) mx-1.5">–</span>{m.score[1]}
           </div>
           <div className="section-tag mt-0.5">Predicted</div>
         </div>
         <div className="flex items-center gap-2.5 justify-end">
           <div className="text-right">
             <div className="font-bold text-[14.5px]">{away.name}</div>
-            <div className="text-[var(--text-dim)] text-[11.5px]">Elo {away.elo}</div>
+            <div className="text-(--text-dim) text-[11.5px]">Elo {away.elo}</div>
           </div>
           <Crest team={away} size={42} />
         </div>
       </div>
 
       <div
-        className="mt-4 p-3 rounded-[11px] border border-[var(--line)] bg-[var(--surface-2)]"
+        className="mt-4 p-3 rounded-[11px] border border-(--line) bg-(--surface-2)"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 mb-2.5">
-          <Target size={14} className="text-[var(--accent-2)]" />
+          <Target size={14} className="text-(--accent-2)" />
           <span className="section-tag">Jack&apos;s pick</span>
           {locked && <span className="badge badge-dim text-[10px] ml-auto">Locked</span>}
           {!locked && !userPick && <span className="badge badge-warm text-[10px] ml-auto">Not set</span>}
@@ -117,8 +117,8 @@ function MatchCard({
           </PickButton>
         </div>
         {userPick && (
-          <div className="text-[var(--text-dim)] text-[11px] mt-2">
-            Your pick: <span className="text-[var(--text)] font-semibold">{userPick.pickLabel}</span>
+          <div className="text-(--text-dim) text-[11px] mt-2">
+            Your pick: <span className="text-(--text) font-semibold">{userPick.pickLabel}</span>
           </div>
         )}
       </div>
@@ -126,12 +126,12 @@ function MatchCard({
       <div className="flex items-center gap-3.5 mt-4">
         <div className="flex-1">
           <div className="flex items-center gap-1.5 text-xs mb-1.5">
-            <Bolt size={13} className="text-[var(--accent)]" />
-            <b className="text-[var(--accent)]">AI Pick:</b>
+            <Bolt size={13} className="text-(--accent)" />
+            <b className="text-(--accent)">AI Pick:</b>
             <span className="font-bold">{pickLabel}</span>
           </div>
           <TriBar winH={m.winH} draw={m.draw} winA={m.winA} homeColor={teamColor(home)} awayColor={teamColor(away)} />
-          <div className="flex justify-between mt-1.5 text-[11.5px] text-[var(--text-dim)] tabular-nums">
+          <div className="flex justify-between mt-1.5 text-[11.5px] text-(--text-dim) tabular-nums">
             <span>{home.code} {m.winH}%</span><span>Draw {m.draw}%</span><span>{away.code} {m.winA}%</span>
           </div>
         </div>
@@ -142,31 +142,31 @@ function MatchCard({
       </div>
 
       <div className="overflow-hidden transition-[max-height] duration-350" style={{ maxHeight: expanded ? 380 : 0 }}>
-        <hr className="border-0 h-px bg-[var(--line)] my-4" />
+        <hr className="border-0 h-px bg-(--line) my-4" />
         <div className="section-tag mb-2">Why the model picks this</div>
         <div className="flex flex-col gap-2">
           {m.reasons.map((r, i) => (
             <div key={i} className="flex gap-2 text-[13px] items-start">
-              <Check size={14} className="text-[var(--accent)] mt-0.5 shrink-0" />
-              <span className="text-[var(--text-mid)]">{r}</span>
+              <Check size={14} className="text-(--accent) mt-0.5 shrink-0" />
+              <span className="text-(--text-mid)">{r}</span>
             </div>
           ))}
         </div>
         {m.risk && (
           <div className="flex gap-2.5 items-start mt-3.5 p-3 rounded-[11px] bg-[rgba(255,178,61,0.09)] border border-[rgba(255,178,61,0.22)]">
-            <Info size={15} className="text-[var(--accent-warm)] shrink-0 mt-0.5" />
+            <Info size={15} className="text-(--accent-warm) shrink-0 mt-0.5" />
             <div>
-              <div className="section-tag text-[var(--accent-warm)] mb-0.5">Risk factor</div>
-              <span className="text-[var(--text-mid)] text-[13px]">{m.risk}</span>
+              <div className="section-tag text-(--accent-warm) mb-0.5">Risk factor</div>
+              <span className="text-(--text-mid) text-[13px]">{m.risk}</span>
             </div>
           </div>
         )}
-        <div className="text-[var(--text-dim)] text-[11px] mt-3 flex items-center gap-1">
+        <div className="text-(--text-dim) text-[11px] mt-3 flex items-center gap-1">
           <Clock size={12} /> Data freshness: updated {data.meta.lastUpdate} · picks lock at kickoff
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-1 mt-3 text-[11.5px] text-[var(--text-dim)] font-semibold">
+      <div className="flex items-center justify-center gap-1 mt-3 text-[11.5px] text-(--text-dim) font-semibold">
         {expanded ? "Hide reasoning" : "Tap for AI reasoning"} <ChevronRight size={12} />
       </div>
     </div>
@@ -225,7 +225,7 @@ export function PicksView({ data }: { data: WorldCupData }) {
       <div className="card p-4 mb-4 flex flex-wrap items-center gap-3">
         <div>
           <div className="font-bold text-[14px]">Submit your picks before kickoff</div>
-          <div className="text-[var(--text-dim)] text-[12.5px] mt-0.5">
+          <div className="text-(--text-dim) text-[12.5px] mt-0.5">
             Tap Home Win, Draw, or Away Win on each match. Unset picks stay blank — the app won&apos;t default to the AI.
           </div>
         </div>
@@ -238,7 +238,7 @@ export function PicksView({ data }: { data: WorldCupData }) {
       </div>
 
       {error && (
-        <div className="card p-3 mb-4 border-[rgba(var(--bad-rgb),0.3)] text-[var(--bad)] text-[13px]">
+        <div className="card p-3 mb-4 border-[rgba(var(--bad-rgb),0.3)] text-(--bad) text-[13px]">
           {error}
         </div>
       )}
@@ -256,8 +256,8 @@ export function PicksView({ data }: { data: WorldCupData }) {
       {data.matches.length === 0 ? (
         <div className="card p-8 text-center">
           <Clock size={28} className="mx-auto mb-3 opacity-20" />
-          <div className="text-[var(--text-mid)] font-medium mb-1">No matches scheduled right now</div>
-          <div className="text-[var(--text-dim)] text-[12.5px]">Check back after the morning refresh when fixtures are loaded.</div>
+          <div className="text-(--text-mid) font-medium mb-1">No matches scheduled right now</div>
+          <div className="text-(--text-dim) text-[12.5px]">Check back after the morning refresh when fixtures are loaded.</div>
         </div>
       ) : (
         <div className="grid gap-[18px] stagger" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))" }}>

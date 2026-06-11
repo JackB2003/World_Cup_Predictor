@@ -89,21 +89,21 @@ export function FormRow({ form }: { form: FormResult[] }) {
 }
 
 export function Delta({ trend }: { trend: number }) {
-  if (trend > 0) return <span className="text-[var(--good)] text-xs font-extrabold inline-flex items-center gap-0.5"><ArrowUp size={12} />{trend}</span>;
-  if (trend < 0) return <span className="text-[var(--bad)] text-xs font-extrabold inline-flex items-center gap-0.5"><ArrowDown size={12} />{Math.abs(trend)}</span>;
-  return <span className="text-[var(--text-dim)] text-xs font-extrabold inline-flex items-center"><Minus size={12} /></span>;
+  if (trend > 0) return <span className="text-(--good) text-xs font-extrabold inline-flex items-center gap-0.5"><ArrowUp size={12} />{trend}</span>;
+  if (trend < 0) return <span className="text-(--bad) text-xs font-extrabold inline-flex items-center gap-0.5"><ArrowDown size={12} />{Math.abs(trend)}</span>;
+  return <span className="text-(--text-dim) text-xs font-extrabold inline-flex items-center"><Minus size={12} /></span>;
 }
 
 export function CardHead({ icon, tag, title, more, onMore }: { icon?: React.ReactNode; tag?: string; title: string; more?: string; onMore?: () => void }) {
   return (
     <div className="flex items-center gap-3 mb-4">
-      {icon && <div className="w-[30px] h-[30px] rounded-[9px] grid place-items-center bg-[rgba(var(--accent-rgb),0.12)] text-[var(--accent)]">{icon}</div>}
+      {icon && <div className="w-[30px] h-[30px] rounded-[9px] grid place-items-center bg-[rgba(var(--accent-rgb),0.12)] text-(--accent)">{icon}</div>}
       <div className="flex-1">
         {tag && <div className="section-tag">{tag}</div>}
         <h3 className="display text-[15px] m-0">{title}</h3>
       </div>
       {more && onMore && (
-        <button onClick={onMore} className="text-[var(--text-dim)] text-xs font-semibold flex items-center gap-1 hover:text-[var(--text)]">
+        <button onClick={onMore} className="text-(--text-dim) text-xs font-semibold flex items-center gap-1 hover:text-(--text)">
           {more} <ChevronRight size={14} />
         </button>
       )}

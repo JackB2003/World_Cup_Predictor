@@ -7,7 +7,7 @@ import { CardHead, Crest, Delta, ProbBar, teamColor } from "@/components/ui/prim
 function ScorerRow({ s, data, rank, max }: { s: Scorer; data: WorldCupData; rank: number; max: number }) {
   const t = data.teamMap[s.team];
   return (
-    <div className="lift grid items-center gap-3 p-3 rounded-xl border border-[var(--line)]" style={{ gridTemplateColumns: "30px 40px 1fr 120px 70px 44px" }}>
+    <div className="lift grid items-center gap-3 p-3 rounded-xl border border-(--line)" style={{ gridTemplateColumns: "30px 40px 1fr 120px 70px 44px" }}>
       <span className="num text-[22px]" style={{ color: rank === 1 ? "var(--accent)" : "var(--text-dim)" }}>{rank}</span>
       <Crest team={t} size={32} />
       <div className="min-w-0">
@@ -15,14 +15,14 @@ function ScorerRow({ s, data, rank, max }: { s: Scorer; data: WorldCupData; rank
           {s.player}
           {s.pens && <span className="badge badge-dim text-[10px] px-1.5 py-0">PK</span>}
         </div>
-        <div className="text-[var(--text-dim)] text-[11.5px] truncate">{s.note}</div>
+        <div className="text-(--text-dim) text-[11.5px] truncate">{s.note}</div>
       </div>
       <div>
         <ProbBar value={(s.prob / max) * 100} color={teamColor(t)} delay={rank * 40} />
-        <div className="text-[var(--text-dim)] text-[11px] mt-1 tabular-nums">Golden Boot {s.prob}%</div>
+        <div className="text-(--text-dim) text-[11px] mt-1 tabular-nums">Golden Boot {s.prob}%</div>
       </div>
       <div className="text-right">
-        <div className="num text-[22px] text-[var(--accent)]">{s.proj}</div>
+        <div className="num text-[22px] text-(--accent)">{s.proj}</div>
         <div className="section-tag">Proj. goals</div>
       </div>
       <Delta trend={s.trend} />
@@ -53,18 +53,18 @@ export function ScorerView({ data }: { data: WorldCupData }) {
           <div className="flex items-center gap-4 mt-4">
             <div className="relative">
               <Crest team={t} size={68} />
-              <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-[9px] bg-[var(--accent)] text-[#07090F] grid place-items-center shadow-lg">
+              <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-[9px] bg-(--accent) text-[#07090F] grid place-items-center shadow-lg">
                 <Footprints size={15} />
               </div>
             </div>
             <div>
               <div className="display text-[26px] leading-tight">{leader.player}</div>
-              <div className="text-[var(--text-mid)] text-[13.5px] mt-0.5">{t.name} · {leader.pos}</div>
+              <div className="text-(--text-mid) text-[13.5px] mt-0.5">{t.name} · {leader.pos}</div>
             </div>
           </div>
           <div className="flex gap-6 mt-6">
             <div>
-              <div className="num text-[44px] text-[var(--accent)] leading-[0.9]">{leader.proj}</div>
+              <div className="num text-[44px] text-(--accent) leading-[0.9]">{leader.proj}</div>
               <div className="section-tag mt-1">Projected goals</div>
             </div>
             <div>
@@ -78,10 +78,10 @@ export function ScorerView({ data }: { data: WorldCupData }) {
           <CardHead icon={<Sparkles size={17} />} tag="Top-scorer formula" title={`Why ${leader.player.split(" ").pop()} leads the model`} />
           <div className="grid grid-cols-3 gap-3">
             {tiles.map((b) => (
-              <div key={b.k} className="bg-[var(--surface-2)] rounded-xl p-3.5">
+              <div key={b.k} className="bg-(--surface-2) rounded-xl p-3.5">
                 <div className="section-tag">{b.k}</div>
                 <div className="num text-[26px] mt-1" style={{ color: b.good ? "var(--good)" : "var(--text)" }}>{b.v}</div>
-                <div className="text-[var(--text-dim)] text-[11px]">{b.note}</div>
+                <div className="text-(--text-dim) text-[11px]">{b.note}</div>
               </div>
             ))}
           </div>

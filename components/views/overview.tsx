@@ -62,14 +62,14 @@ export function OverviewView({ data }: { data: WorldCupData }) {
             </div>
             <div className="display text-[40px] leading-none my-2">Kickoff in</div>
             <div className="text-[13.5px] font-semibold opacity-70">
-              {data.meta.tournament} · {data.meta.simRuns.toLocaleString()} simulations refreshed daily
+              {data.meta.tournament}
             </div>
           </div>
           <div className="relative"><Countdown to={data.meta.kickoff} /></div>
           <div className="relative border-l border-[rgba(7,9,15,0.2)] pl-7">
             <div className="num text-[52px] leading-[0.85]">{data.meta.matchesToday}</div>
             <div className="text-[10.5px] font-extrabold tracking-[0.14em] uppercase opacity-70">Matches today</div>
-            <Link href="/picks" className="mt-3 inline-flex items-center gap-1.5 bg-[#07090F] text-[var(--accent)] px-3.5 py-2 rounded-[10px] text-xs font-bold">
+            <Link href="/picks" className="mt-3 inline-flex items-center gap-1.5 bg-[#07090F] text-(--accent) px-3.5 py-2 rounded-[10px] text-xs font-bold">
               View today&apos;s picks <ChevronRight size={13} />
             </Link>
           </div>
@@ -81,14 +81,14 @@ export function OverviewView({ data }: { data: WorldCupData }) {
         <Link href="/picks">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2.5 mb-3.5">
             <div className="flex items-center gap-2"><Crest team={home} size={36} /><b className="text-sm">{home.name}</b></div>
-            <div className="num text-[30px] text-center whitespace-nowrap">{topMatch.score[0]}<span className="text-[var(--text-dim)] mx-1">–</span>{topMatch.score[1]}</div>
+            <div className="num text-[30px] text-center whitespace-nowrap">{topMatch.score[0]}<span className="text-(--text-dim) mx-1">–</span>{topMatch.score[1]}</div>
             <div className="flex items-center gap-2 flex-row-reverse"><Crest team={away} size={36} /><b className="text-sm">{away.name}</b></div>
           </div>
           <TriBar winH={topMatch.winH} draw={topMatch.draw} winA={topMatch.winA} homeColor={teamColor(home)} awayColor={teamColor(away)} />
           <div className="flex items-center mt-3.5 gap-3">
             <span className="badge badge-accent"><Bolt size={12} /> {pickLabel}</span>
-            <span className="text-[var(--text-dim)] text-xs">{topMatch.stage}</span>
-            <span className="ml-auto num text-[26px] text-[var(--good)]">{topMatch.conf}%</span>
+            <span className="text-(--text-dim) text-xs">{topMatch.stage}</span>
+            <span className="ml-auto num text-[26px] text-(--good)">{topMatch.conf}%</span>
           </div>
         </Link>
       </div>
@@ -114,11 +114,11 @@ export function OverviewView({ data }: { data: WorldCupData }) {
             const t = data.teamMap[s.team];
             return (
               <div key={s.player} className="flex items-center gap-2.5">
-                <span className="num text-[var(--text-dim)] w-4 text-base">{i + 1}</span>
+                <span className="num text-(--text-dim) w-4 text-base">{i + 1}</span>
                 <Crest team={t} size={26} />
                 <span className="flex-1 text-[13px] font-semibold">{s.player}</span>
                 <div className="w-[70px]"><ProbBar value={(s.prob / maxS) * 100} color={teamColor(t)} height={7} delay={i * 50} /></div>
-                <span className="num w-10 text-right text-lg text-[var(--accent)]">{s.proj}</span>
+                <span className="num w-10 text-right text-lg text-(--accent)">{s.proj}</span>
               </div>
             );
           })}
@@ -129,13 +129,13 @@ export function OverviewView({ data }: { data: WorldCupData }) {
         <CardHead icon={<Bell size={17} />} tag="Needs your attention" title="High-Impact Alerts" more="All news" onMore={() => router.push("/news")} />
         <div className="flex flex-col gap-2.5">
           {alerts.map((n, i) => (
-            <div key={i} className="flex gap-2.5 items-start p-2.5 rounded-[11px] bg-[var(--surface-2)]">
-              <span className="w-[26px] h-[26px] rounded-lg grid place-items-center bg-[rgba(var(--bad-rgb),0.16)] text-[var(--bad)] shrink-0">
+            <div key={i} className="flex gap-2.5 items-start p-2.5 rounded-[11px] bg-(--surface-2)">
+              <span className="w-[26px] h-[26px] rounded-lg grid place-items-center bg-[rgba(var(--bad-rgb),0.16)] text-(--bad) shrink-0">
                 <Bell size={14} />
               </span>
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-semibold leading-snug">{n.title}</div>
-                <div className="text-[var(--text-dim)] text-[11.5px] mt-0.5">{n.impact} · {n.time}</div>
+                <div className="text-(--text-dim) text-[11.5px] mt-0.5">{n.impact} · {n.time}</div>
               </div>
             </div>
           ))}

@@ -24,7 +24,7 @@ function NewsItemCard({ n, data }: { n: NewsItem; data: WorldCupData }) {
   const t = data.teamMap[n.team];
   const sev = SEV_MAP[n.sev];
   return (
-    <div className="lift flex gap-3.5 p-4 rounded-[14px] border border-[var(--line)]">
+    <div className="lift flex gap-3.5 p-4 rounded-[14px] border border-(--line)">
       <div className="relative">
         <Crest team={t} size={44} />
         <div className="absolute -bottom-1 -right-1 w-[22px] h-[22px] rounded-[7px] grid place-items-center text-[#07090F]" style={{ background: sev.dot }}>
@@ -34,11 +34,11 @@ function NewsItemCard({ n, data }: { n: NewsItem; data: WorldCupData }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <span className={`badge ${sev.cls} text-[10.5px]`}>{sev.label}</span>
-          <span className="text-[var(--text-dim)] text-[11.5px] capitalize">{n.type === "form" ? "momentum" : n.type}</span>
-          <span className="text-[var(--text-dim)] text-[11.5px] ml-auto">{n.time}</span>
+          <span className="text-(--text-dim) text-[11.5px] capitalize">{n.type === "form" ? "momentum" : n.type}</span>
+          <span className="text-(--text-dim) text-[11.5px] ml-auto">{n.time}</span>
         </div>
         <div className="font-bold text-[14.5px] mb-1">{n.title}</div>
-        <div className="text-[var(--text-mid)] text-[12.5px] leading-relaxed">{n.body}</div>
+        <div className="text-(--text-mid) text-[12.5px] leading-relaxed">{n.body}</div>
         <div className="mt-2">
           <span className="badge badge-accent text-[11px]"><Bolt size={11} /> {n.impact}</span>
         </div>
@@ -96,8 +96,8 @@ export function NewsView({ data }: { data: WorldCupData }) {
         {shown_sorted.length === 0 ? (
           <div className="card p-8 text-center">
             <Bell size={28} className="mx-auto mb-3 opacity-20" />
-            <div className="text-[var(--text-mid)] text-[13.5px] font-medium mb-1">No alerts in this category</div>
-            <div className="text-[var(--text-dim)] text-[12px]">
+            <div className="text-(--text-mid) text-[13.5px] font-medium mb-1">No alerts in this category</div>
+            <div className="text-(--text-dim) text-[12px]">
               {filter === "lineup" ? "Lineups are announced ~1 hour before kickoff" : "Check back after the next data refresh"}
             </div>
           </div>
@@ -113,28 +113,28 @@ export function NewsView({ data }: { data: WorldCupData }) {
           <CardHead icon={<Bell size={17} />} title="Alert Summary" />
           <div className="flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <div className="num text-[36px] text-[var(--bad)] leading-none">{counts.high}</div>
-              <div className="text-[var(--text-mid)] text-[13px]">High-impact alerts<br /><span className="text-[var(--text-dim)] text-[11.5px]">affecting picks</span></div>
+              <div className="num text-[36px] text-(--bad) leading-none">{counts.high}</div>
+              <div className="text-(--text-mid) text-[13px]">High-impact alerts<br /><span className="text-(--text-dim) text-[11.5px]">affecting picks</span></div>
             </div>
-            <hr className="border-0 h-px bg-[var(--line)]" />
+            <hr className="border-0 h-px bg-(--line)" />
             <div className="flex items-center gap-3">
-              <div className="num text-[36px] text-[var(--accent-warm)] leading-none">{counts.fitness}</div>
-              <div className="text-[var(--text-mid)] text-[13px]">Fitness concerns<br /><span className="text-[var(--text-dim)] text-[11.5px]">injuries + suspensions</span></div>
+              <div className="num text-[36px] text-(--accent-warm) leading-none">{counts.fitness}</div>
+              <div className="text-(--text-mid) text-[13px]">Fitness concerns<br /><span className="text-(--text-dim) text-[11.5px]">injuries + suspensions</span></div>
             </div>
-            <hr className="border-0 h-px bg-[var(--line)]" />
+            <hr className="border-0 h-px bg-(--line)" />
             <div className="flex items-center gap-3">
-              <div className="num text-[36px] text-[var(--text-dim)] leading-none">{counts.odds}</div>
-              <div className="text-[var(--text-mid)] text-[13px]">Odds alerts<br /><span className="text-[var(--text-dim)] text-[11.5px]">market signals</span></div>
+              <div className="num text-[36px] text-(--text-dim) leading-none">{counts.odds}</div>
+              <div className="text-(--text-mid) text-[13px]">Odds alerts<br /><span className="text-(--text-dim) text-[11.5px]">market signals</span></div>
             </div>
           </div>
         </div>
         <div className="card p-5" style={{ background: "linear-gradient(150deg, rgba(var(--accent-rgb),0.08), var(--surface))" }}>
           <div className="flex items-center gap-2 mb-2"><RefreshCw size={16} /><span className="section-tag">Data sources</span></div>
-          <div className="text-[var(--text-mid)] text-[13px] leading-relaxed space-y-2">
-            <div><span className="text-[var(--text)] font-medium">Injuries/Bans</span> — API-Football, updated at 6am & pre-match</div>
-            <div><span className="text-[var(--text)] font-medium">Odds</span> — Market data, auto-generated from latest odds</div>
-            <div><span className="text-[var(--text)] font-medium">Form</span> — Auto-generated from pre-tournament results</div>
-            <div><span className="text-[var(--text)] font-medium">Lineups</span> — Announced ~1hr before kickoff</div>
+          <div className="text-(--text-mid) text-[13px] leading-relaxed space-y-2">
+            <div><span className="text-(--text) font-medium">Injuries/Bans</span> — API-Football, updated at 6am & pre-match</div>
+            <div><span className="text-(--text) font-medium">Odds</span> — Market data, auto-generated from latest odds</div>
+            <div><span className="text-(--text) font-medium">Form</span> — Auto-generated from pre-tournament results</div>
+            <div><span className="text-(--text) font-medium">Lineups</span> — Announced ~1hr before kickoff</div>
           </div>
         </div>
       </div>
