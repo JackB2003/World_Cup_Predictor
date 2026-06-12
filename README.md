@@ -6,13 +6,14 @@
 
 **AI-powered FIFA World Cup 2026 prediction dashboard**
 
+[![Live Demo](https://img.shields.io/badge/live_demo-pitchiq2026.com-ff6b35?style=flat-square&logo=vercel&logoColor=white)](https://pitchiq2026.com)
 [![Use this template](https://img.shields.io/badge/use_this_template-2ea44f?style=flat-square&logo=github&logoColor=white)](https://github.com/JackB2003/World_Cup_Predictor/generate)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![PocketBase](https://img.shields.io/badge/PocketBase-0.39-b8dbe4?style=flat-square)](https://pocketbase.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](#)
 
-[Developer Docs](docs/DEVELOPER_HANDOFF.md) · [Product Spec](docs/ai_world_cup_predictor_project_requirements.md)
+[Live Demo](https://pitchiq2026.com) · [Developer Docs](docs/DEVELOPER_HANDOFF.md) · [Product Spec](docs/ai_world_cup_predictor_project_requirements.md)
 
 </div>
 
@@ -25,6 +26,22 @@ PitchIQ is a full-stack World Cup prediction dashboard. It pulls live tournament
 Every morning a cron job refreshes fixtures, re-runs predictions with the latest Elo ratings and tournament stats, and updates Golden Boot projections. The result is a live, data-driven dashboard you and your group can actually argue about.
 
 > **This is a template.** Click **Use this template** above to create your own instance. Point it at your own API keys and PocketBase instance — no accounts or sign-in required.
+
+<br />
+
+## Screenshots
+
+| Overview | Today's Picks |
+|---|---|
+| ![Overview](docs/screenshots/overview.png) | ![Today's Picks](docs/screenshots/picks.png) |
+
+| Tournament Outlook | Top Scorer Watch |
+|---|---|
+| ![Tournament Outlook](docs/screenshots/outlook.png) | ![Top Scorer Watch](docs/screenshots/scorer.png) |
+
+| News & Injury Alerts |
+|---|
+| ![News & Alerts](docs/screenshots/news.png) |
 
 <br />
 
