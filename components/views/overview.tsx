@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Bolt, ChevronRight, Flag, Trophy, Bell, Footprints } from "lucide-react";
-import type { WorldCupData } from "@/types/world-cup";
+import type { Team, WorldCupData } from "@/types/world-cup";
 import { CardHead, Crest, ProbBar, TriBar, teamColor } from "@/components/ui/primitives";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -56,8 +56,26 @@ export function OverviewView({ data }: { data: WorldCupData }) {
   const alerts = data.news.filter((n) => n.sev === "high").slice(0, 5);
 
   if (!topMatch) return null;
-  const home = data.teamMap[topMatch.home];
-  const away = data.teamMap[topMatch.awayCode];
+  const fallbackTeam = (code: string): Team => ({
+    code,
+    name: code,
+    color: "#6b7280",
+    elo: 1500,
+    fifa: 0,
+    group: "",
+    titleProb: 0,
+    top4: 0,
+    advance: 0,
+    form: [],
+    gf: 0,
+    ga: 0,
+    xg: 0,
+    conf: "—",
+    trend: 0,
+  });
+  const home = data.teamMap[topMatch.home] ?? fallbackTeam(topMatch.home);
+  const away = data.teamMap[topMatch.awayCode] ?? fallbackTeam(topMatch.awayCode);
+  const score = topMatch.score ?? [0, 0];
   const pickLabel = topMatch.pickKind === "draw" ? "Draw" : `${data.teamMap[topMatch.pick]?.name ?? topMatch.pick} Win`;
 
   return (
@@ -90,7 +108,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
         <Link href="/picks">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2.5 mb-3.5">
             <div className="flex items-center gap-2 min-w-0"><Crest team={home} size={36} /><b className="text-sm truncate">{home.name}</b></div>
-            <div className="num text-[30px] text-center whitespace-nowrap">{topMatch.score[0]}<span className="text-(--text-dim) mx-1">–</span>{topMatch.score[1]}</div>
+            <div className="num text-[30px] text-center whitespace-nowrap">{score[0]}<span className="text-(--text-dim) mx-1">–</span>{score[1]}</div>
             <div className="flex items-center gap-2 flex-row-reverse min-w-0"><Crest team={away} size={36} /><b className="text-sm truncate">{away.name}</b></div>
           </div>
           <TriBar winH={topMatch.winH} draw={topMatch.draw} winA={topMatch.winA} homeColor={teamColor(home)} awayColor={teamColor(away)} />
@@ -126,7 +144,7 @@ export function OverviewView({ data }: { data: WorldCupData }) {
                 <span className="num text-(--text-dim) w-4 text-base">{i + 1}</span>
                 <Crest team={t} size={26} />
                 <span className="flex-1 text-[13px] font-semibold">{s.player}</span>
-                <div className="w-[70px]"><ProbBar value={(s.prob / maxS) * 100} color={teamColor(t)} height={7} delay={i * 50} /></div>
+                <div className="w-[70px]"><ProbBar value={(s.prob / maxS) * 100} color={t ? teamColor(t) : undefined} height={7} delay={i * 50} /></div>
                 <span className="num w-10 text-right text-lg text-(--accent)">{s.proj}</span>
               </div>
             );
