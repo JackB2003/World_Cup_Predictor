@@ -1,24 +1,30 @@
-name: Deploy to VPS
+name: CI
 
 on:
   push:
     branches:
       - main
-
-concurrency:
-  group: deploy-production
-  cancel-in-progress: true
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
-    name: Deploy to production
-    runs-on: self-hosted
+  build:
+    name: Build check
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy
-        run: |
-          set -euo pipefail
-          cd /var/www/world-cup-predictor
-          git fetch origin main
-          git reset --hard origin/main
-          bash scripts/deploy.sh
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
