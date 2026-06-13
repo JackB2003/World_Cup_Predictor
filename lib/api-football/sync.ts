@@ -1,6 +1,7 @@
 import { apiFootball } from "@/lib/api-football/client";
 import { resolveTeamCode } from "@/lib/api-football/team-codes";
 import { WC2026_TEAMS } from "@/lib/api-football/wc2026-teams";
+import { WC2026_GROUP_MAP } from "@/lib/api-football/wc2026-groups";
 import type {
   ApiFixtureItem,
   ApiInjuryItem,
@@ -88,6 +89,16 @@ export async function syncFixtures(pb: Pb, leagueId: string, season: string): Pr
       skipped++;
       console.warn(
         `  skip fixture ${item.fixture.id}: unresolved team(s) ${item.teams.home.name} vs ${item.teams.away.name}`,
+      );
+      continue;
+    }
+
+    const homeGroup = WC2026_GROUP_MAP[homeCode];
+    const awayGroup = WC2026_GROUP_MAP[awayCode];
+    if (homeGroup && awayGroup && homeGroup !== awayGroup) {
+      skipped++;
+      console.warn(
+        `  skip fixture ${item.fixture.id}: cross-group match ${homeCode}(${homeGroup}) vs ${awayCode}(${awayGroup})`,
       );
       continue;
     }
