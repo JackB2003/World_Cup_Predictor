@@ -65,6 +65,7 @@ export interface Scorer {
   projectedMatches?: number;
   groupDifficulty?: number;
   injuryRisk?: string;
+  gamesPlayed?: number;
 }
 
 export interface NewsItem {

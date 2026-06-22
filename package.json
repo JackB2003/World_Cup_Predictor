@@ -29,7 +29,10 @@
     "fallow:audit": "fallow audit",
     "news:add": "tsx scripts/add-news.ts",
     "news:generate": "tsx scripts/generate-news.ts",
-    "import:lineups": "tsx scripts/import-lineups.ts"
+    "import:lineups": "tsx scripts/import-lineups.ts",
+    "import:topscorers": "tsx scripts/import-topscorers.ts",
+    "refresh:injuries": "tsx scripts/refresh-injuries.ts",
+    "refresh:cycle": "tsx scripts/cycle-refresh.ts"
   },
   "dependencies": {
     "lucide-react": "^0.511.0",

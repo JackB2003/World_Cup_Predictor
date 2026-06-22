@@ -47,7 +47,7 @@ function NewsItemCard({ n, data }: { n: NewsItem; data: WorldCupData }) {
   );
 }
 
-type Filter = "all" | "fitness" | "odds" | "form" | "lineup";
+type Filter = "all" | "fitness" | "odds" | "news";
 
 export function NewsView({ data }: { data: WorldCupData }) {
   const [filter, setFilter] = useState<Filter>("all");
@@ -56,8 +56,7 @@ export function NewsView({ data }: { data: WorldCupData }) {
     all: data.news.length,
     fitness: data.news.filter((n) => n.type === "injury" || n.type === "suspension").length,
     odds: data.news.filter((n) => n.type === "odds").length,
-    form: data.news.filter((n) => n.type === "form").length,
-    lineup: data.news.filter((n) => n.type === "lineup").length,
+    news: data.news.filter((n) => n.type === "news").length,
     high: data.news.filter((n) => n.sev === "high").length,
   };
 
@@ -86,20 +85,15 @@ export function NewsView({ data }: { data: WorldCupData }) {
           <button className={filter === "odds" ? "on" : ""} onClick={() => setFilter("odds")}>
             Odds {counts.odds > 0 && <span className="ml-1 opacity-60 text-[10px]">{counts.odds}</span>}
           </button>
-          <button className={filter === "form" ? "on" : ""} onClick={() => setFilter("form")}>
-            Form {counts.form > 0 && <span className="ml-1 opacity-60 text-[10px]">{counts.form}</span>}
-          </button>
-          <button className={filter === "lineup" ? "on" : ""} onClick={() => setFilter("lineup")}>
-            Lineups {counts.lineup > 0 && <span className="ml-1 opacity-60 text-[10px]">{counts.lineup}</span>}
+          <button className={filter === "news" ? "on" : ""} onClick={() => setFilter("news")}>
+            News {counts.news > 0 && <span className="ml-1 opacity-60 text-[10px]">{counts.news}</span>}
           </button>
         </div>
         {shown_sorted.length === 0 ? (
           <div className="card p-8 text-center">
             <Bell size={28} className="mx-auto mb-3 opacity-20" />
             <div className="text-(--text-mid) text-[13.5px] font-medium mb-1">No alerts in this category</div>
-            <div className="text-(--text-dim) text-[12px]">
-              {filter === "lineup" ? "Lineups are announced ~1 hour before kickoff" : "Check back after the next data refresh"}
-            </div>
+            <div className="text-(--text-dim) text-[12px]">Check back after the next data refresh</div>
           </div>
         ) : (
           <div className="grid gap-3 stagger">
@@ -131,10 +125,9 @@ export function NewsView({ data }: { data: WorldCupData }) {
         <div className="card p-5" style={{ background: "linear-gradient(150deg, rgba(var(--accent-rgb),0.08), var(--surface))" }}>
           <div className="flex items-center gap-2 mb-2"><RefreshCw size={16} /><span className="section-tag">Data sources</span></div>
           <div className="text-(--text-mid) text-[13px] leading-relaxed space-y-2">
-            <div><span className="text-(--text) font-medium">Injuries/Bans</span> — API-Football, updated at 6am & pre-match</div>
-            <div><span className="text-(--text) font-medium">Odds</span> — Market data, auto-generated from latest odds</div>
-            <div><span className="text-(--text) font-medium">Form</span> — Auto-generated from pre-tournament results</div>
-            <div><span className="text-(--text) font-medium">Lineups</span> — Announced ~1hr before kickoff</div>
+            <div><span className="text-(--text) font-medium">Injuries/Bans</span> — AI web search (ESPN, BBC Sport, FIFA.com), refreshed every 3 hours</div>
+            <div><span className="text-(--text) font-medium">Odds</span> — AI web search (Bet365, DraftKings), refreshed every 3 hours</div>
+            <div><span className="text-(--text) font-medium">News</span> — Top 5 stories from ESPN, BBC Sport & FIFA.com, refreshed every 3 hours</div>
           </div>
         </div>
       </div>

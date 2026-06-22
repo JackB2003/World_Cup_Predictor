@@ -111,11 +111,12 @@ export async function syncFixtures(pb: Pb, leagueId: string, season: string): Pr
     const payload = {
       matchId,
       kickoffAt: item.fixture.date,
-      time: new Date(item.fixture.date).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }),
+      time: (() => {
+        const d = new Date(item.fixture.date);
+        const hh = String(d.getUTCHours()).padStart(2, "0");
+        const mm = String(d.getUTCMinutes()).padStart(2, "0");
+        return `${hh}:${mm}`;
+      })(),
       venue: `${item.venue?.name ?? ""} · ${item.venue?.city ?? ""}`.trim(),
       stage: item.league.round,
       homeCode,

@@ -18,6 +18,8 @@ async function main() {
       execSync("npm run import:api-football", { stdio: "inherit" });
       execSync("npm run import:team-data", { stdio: "inherit" });
       execSync("npm run import:elo-ratings", { stdio: "inherit" });
+      execSync("npm run import:fixture-stats", { stdio: "inherit" });
+      execSync("npm run import:topscorers", { stdio: "inherit" });
       recordsUpdated += 3;
     } catch (e) {
       errors += `import: ${e}; `;
@@ -26,6 +28,7 @@ async function main() {
     execSync("npm run grade:picks", { stdio: "inherit" });
     execSync("npm run predict:top4", { stdio: "inherit" });
     execSync("npm run predict:scorer", { stdio: "inherit" });
+    execSync("npm run refresh:injuries", { stdio: "inherit" });
     execSync("npm run news:generate", { stdio: "inherit" });
     execSync("npm run predict:today", { stdio: "inherit" });
     recordsUpdated += 3;

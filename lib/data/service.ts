@@ -28,7 +28,7 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
         pb.collection(COLLECTIONS.teams).getFullList({ sort: "-titleProb" }),
         pb.collection(COLLECTIONS.matches).getFullList({ sort: "kickoffAt" }),
         pb.collection(COLLECTIONS.predictions).getFullList(),
-        pb.collection(COLLECTIONS.scorers).getFullList({ sort: "-prob" }),
+        pb.collection(COLLECTIONS.scorers).getFullList({ sort: "-goals,-prob" }),
         pb.collection(COLLECTIONS.news).getFullList(),
         pb.collection(COLLECTIONS.userPicks).getFullList({ sort: "id" }),
         pb.collection(COLLECTIONS.meta).getFullList({ filter: 'key = "dashboard"' }),
@@ -59,7 +59,7 @@ export async function fetchWorldCupData(): Promise<WorldCupData> {
       },
     };
   } catch (err) {
-    console.error("[fetchWorldCupData] PocketBase fetch failed, falling back to seed data:", err);
-    return SEED_DATA;
+    console.error("[fetchWorldCupData] PocketBase fetch failed:", err);
+    throw err;
   }
 }
