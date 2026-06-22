@@ -233,6 +233,7 @@ export async function setupPocketBaseCollections(pb: Awaited<ReturnType<typeof e
     { name: "projectedMatches", type: "number" },
     { name: "groupDifficulty", type: "number" },
     { name: "injuryRisk", type: "text" },
+    { name: "gamesPlayed", type: "number" },
   ]);
 
   await ensureCollection(pb, "user_picks", [

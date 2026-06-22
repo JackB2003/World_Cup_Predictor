@@ -76,7 +76,7 @@ async function main() {
   const trend = userPicks[0].accuracyTrend ?? [];
   const nextTrend = [...trend.slice(-6), accuracy];
 
-  const historyJson = sorted.slice(-20).map((h) => ({
+  const historyJson = sorted.map((h) => ({
     match: h.matchLabel,
     pick: h.userPick,
     aiPick: h.aiPick,
@@ -92,6 +92,17 @@ async function main() {
     accuracyTrend: nextTrend,
     history: historyJson,
   });
+
+  // Verify stored history matches source of truth
+  const verified = await pb.collection(COLLECTIONS.userPicks).getOne(userPicks[0].id);
+  const storedCount = (verified.history ?? []).length;
+  if (storedCount !== history.length) {
+    console.error(
+      `HISTORY MISMATCH: stored ${storedCount} records but prediction_history has ${history.length}. Run grade:picks again.`,
+    );
+    process.exit(1);
+  }
+  console.log(`✓ history integrity: ${storedCount}/${history.length} records stored correctly`);
 
   console.log(
     newlyGraded > 0

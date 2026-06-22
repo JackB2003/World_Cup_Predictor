@@ -2,13 +2,28 @@ import { formScore } from "@/features/team-strength";
 import type { Team, NewsItem } from "@/types/world-cup";
 
 const LEAGUE_AVG_GA = 1.1;
-const HOME_ADVANTAGE = 1.1;
+/**
+ * WC 2026 is played at neutral venues in USA/CAN/MEX. Only the three host
+ * nations have genuine crowd support. All other "home" designations in the
+ * fixture data are arbitrary (first-listed team) and carry no real advantage.
+ */
+const HOST_ADVANTAGE = 1.06;
 const MAX_GOALS = 5;
 /** Calibrates λ so typical match totals land around ~2.4–2.8 goals. */
 const LAMBDA_SCALE = 0.88;
 
 const MARKET_WEIGHT = 0.35;
 const MODEL_WEIGHT = 0.65;
+
+/**
+ * Dixon-Coles (1997) correction coefficient.
+ * Standard Poisson models under-predict 0-0 and 1-1 draws because they assume
+ * goal-scoring independence. A negative ρ inflates those two scorelines and
+ * proportionally deflates 1-0 and 0-1, raising the overall draw probability
+ * by ~4–7 pp for balanced WC matches. Typical fitted values for football:
+ * −0.10 to −0.18; using −0.13 as a conservative WC calibration.
+ */
+const DC_RHO = -0.13;
 
 export type PoissonOutcome = "home" | "draw" | "away";
 
@@ -93,7 +108,8 @@ function expectedLambda(
   const attack = Math.max(0.7, attackXg);
   const defenseFactor = gaPerGame(defender) / LEAGUE_AVG_GA;
   const eloMult = eloMultiplier(attacker, defender);
-  const homeMult = isHome ? HOME_ADVANTAGE : 1;
+  // Only host nations (USA/CAN/MEX) carry genuine home-crowd advantage.
+  const homeMult = isHome && attacker.host ? HOST_ADVANTAGE : 1;
   const formMult = 0.92 + formScore(attacker.form) * 0.16;
   const injuries = injuryImpact(news, attacker.code);
   const fatigueMult = restPenalty(restDays);
@@ -101,6 +117,18 @@ function expectedLambda(
   let lambda = attack * defenseFactor * eloMult * homeMult * formMult * fatigueMult * LAMBDA_SCALE;
   lambda *= Math.max(0.5, 1 - injuries);
   return Math.min(4, Math.max(0.25, lambda));
+}
+
+/**
+ * Dixon-Coles τ correction for low-scoring scorelines.
+ * With ρ < 0: inflates P(0-0) and P(1-1); deflates P(1-0) and P(0-1).
+ */
+function dcTau(h: number, a: number, lH: number, lA: number): number {
+  if (h === 0 && a === 0) return 1 - lH * lA * DC_RHO;
+  if (h === 1 && a === 0) return 1 + lA * DC_RHO;
+  if (h === 0 && a === 1) return 1 + lH * DC_RHO;
+  if (h === 1 && a === 1) return 1 - DC_RHO;
+  return 1;
 }
 
 export type PoissonOptions = {
@@ -142,7 +170,8 @@ export function poissonMatchPrediction(
   for (let h = 0; h <= MAX_GOALS; h++) {
     grid[h] = [];
     for (let a = 0; a <= MAX_GOALS; a++) {
-      const p = poissonPMF(h, lambdaHome) * poissonPMF(a, lambdaAway);
+      const raw = poissonPMF(h, lambdaHome) * poissonPMF(a, lambdaAway);
+      const p = raw * dcTau(h, a, lambdaHome, lambdaAway);
       grid[h][a] = p;
       if (h > a) pHome += p;
       else if (h === a) pDraw += p;
@@ -150,6 +179,7 @@ export function poissonMatchPrediction(
     }
   }
 
+  // Renormalize after Dixon-Coles (the τ correction shifts total mass slightly).
   const total = pHome + pDraw + pAway || 1;
   let winH = Math.round((pHome / total) * 100);
   let draw = Math.round((pDraw / total) * 100);

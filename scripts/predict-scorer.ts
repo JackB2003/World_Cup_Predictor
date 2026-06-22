@@ -8,7 +8,9 @@ import type { Scorer, Team } from "@/types/world-cup";
 
 function logTopScorers(ranked: ReturnType<typeof rankScorers>) {
   ranked.slice(0, 5).forEach((s, i) => {
-    console.log(`  ${i + 1}. ${s.player}${s.team ? ` (${s.team})` : ""} — ${s.proj} goals${s.prob ? `, ${s.prob}%` : ""}`);
+    console.log(
+      `  ${i + 1}. ${s.player}${s.team ? ` (${s.team})` : ""} — ${s.goals}g actual, ${s.proj} proj, ${s.prob}% Golden Boot`,
+    );
   });
 }
 
@@ -37,11 +39,9 @@ async function main() {
           await pb.collection(COLLECTIONS.scorers).update(existing[0].id, {
             proj: s.proj,
             prob: s.prob,
-            // Persist computed values so they're visible in the admin UI and display correctly
+            // Only update projection fields — goals/gamesPlayed are managed by import:topscorers
             projectedMatches: s.projectedMatches,
             groupDifficulty: s.groupDifficulty,
-            // Reset tournament goals to 0 if tournament hasn't produced real goals yet
-            ...(existing[0].goals > 0 && existing[0].goals <= 3 ? { goals: 0 } : {}),
           });
         }
       }

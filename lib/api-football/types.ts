@@ -79,3 +79,20 @@ export type ApiSquadItem = {
   team: ApiTeamRef;
   players: ApiSquadPlayer[];
 };
+
+export type ApiTopScorerEntry = {
+  player: {
+    id: number;
+    name: string;
+    firstname: string;
+    lastname: string;
+    nationality: string;
+    position: string;
+  };
+  statistics: Array<{
+    team: ApiTeamRef;
+    games: { appearences: number | null; minutes: number | null };
+    goals: { total: number | null; assists: number | null };
+    penalty: { scored: number | null };
+  }>;
+};

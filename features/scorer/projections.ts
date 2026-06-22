@@ -43,39 +43,56 @@ function groupDifficulty(team: Team, allTeams: Team[]): number {
   return Math.max(0.88, Math.min(1.02, 1.0 - (avgElo - 1650) * 0.0002));
 }
 
-function computeScorerScore(scorer: Scorer, team: Team | undefined, allTeams: Team[]): number {
-  const matches = team ? expectedMatches(team) : (scorer.projectedMatches ?? 5);
-  const grpDiff = team ? groupDifficulty(team, allTeams) : (scorer.groupDifficulty ?? 0.95);
-  const minutes = (scorer.minutes ?? 80) / 90;
-  const g90 = scorer.g90 ?? 0.5;
-  return (
-    matches *
-    minutes *
-    g90 *
-    penaltyBonus(scorer.pens) *
-    grpDiff *
-    injuryModifier(scorer.injuryRisk)
-  );
-}
-
 export function rankScorers(scorers: Scorer[], teams: Team[]): ScorerProjection[] {
   const teamMap = Object.fromEntries(teams.map((t) => [t.code, t]));
+
   const projected = scorers.map((s) => {
     const team = teamMap[s.team];
-    const score = computeScorerScore(s, team, teams);
-    const projectedMatchesCalc = team ? Math.round(expectedMatches(team) * 10) / 10 : (s.projectedMatches ?? 5);
-    const groupDiffCalc = team ? Math.round(groupDifficulty(team, teams) * 1000) / 1000 : (s.groupDifficulty ?? 0.95);
+    const totalExpectedMatches = team ? expectedMatches(team) : (s.projectedMatches ?? 5);
+    const gamesPlayed = s.gamesPlayed ?? 0;
+    const remainingMatches = Math.max(0, totalExpectedMatches - gamesPlayed);
+
+    const grpDiff = team ? groupDifficulty(team, teams) : (s.groupDifficulty ?? 0.95);
+    const minutesRatio = (s.minutes ?? 80) / 90;
+    const g90 = s.g90 ?? 0.5;
+
+    // Projected remaining goals using historical rate (actual goals are already banked)
+    const remainingGoals =
+      remainingMatches *
+      minutesRatio *
+      g90 *
+      penaltyBonus(s.pens) *
+      grpDiff *
+      injuryModifier(s.injuryRisk);
+
+    const actualGoals = s.goals ?? 0;
+    const projTotal = actualGoals + remainingGoals;
+
+    const projectedMatchesCalc = team
+      ? Math.round(totalExpectedMatches * 10) / 10
+      : (s.projectedMatches ?? 5);
+    const groupDiffCalc = team
+      ? Math.round(grpDiff * 1000) / 1000
+      : (s.groupDifficulty ?? 0.95);
+
     return {
       ...s,
-      score,
-      proj: Math.round(score * 10) / 10,
+      score: projTotal,
+      proj: Math.round(projTotal * 10) / 10,
       projectedMatches: projectedMatchesCalc,
       groupDifficulty: groupDiffCalc,
     };
   });
 
   const total = projected.reduce((sum, s) => sum + s.score, 0) || 1;
+
   return projected
     .map((s) => ({ ...s, prob: Math.round((s.score / total) * 1000) / 10 }))
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => {
+      // Primary: current goals DESC (live tournament ranking)
+      const goalsDiff = (b.goals ?? 0) - (a.goals ?? 0);
+      if (goalsDiff !== 0) return goalsDiff;
+      // Tiebreak: projected total DESC
+      return b.score - a.score;
+    });
 }

@@ -25,6 +25,7 @@ type PbTeamRecord = {
 type PbScorerRecord = Omit<Scorer, "team" | "pos"> & {
   teamCode: string;
   position: string;
+  gamesPlayed?: number;
 };
 
 export function mapTeamRecord(raw: unknown): Team {
@@ -71,5 +72,6 @@ export function mapScorerRecord(raw: unknown): Scorer {
     projectedMatches: s.projectedMatches,
     groupDifficulty: s.groupDifficulty,
     injuryRisk: s.injuryRisk,
+    gamesPlayed: s.gamesPlayed,
   };
 }
