@@ -95,7 +95,8 @@ export async function syncFixtures(pb: Pb, leagueId: string, season: string): Pr
 
     const homeGroup = WC2026_GROUP_MAP[homeCode];
     const awayGroup = WC2026_GROUP_MAP[awayCode];
-    if (homeGroup && awayGroup && homeGroup !== awayGroup) {
+    const isGroupStageRound = /^Group Stage/i.test(item.league.round ?? "");
+    if (isGroupStageRound && homeGroup && awayGroup && homeGroup !== awayGroup) {
       skipped++;
       console.warn(
         `  skip fixture ${item.fixture.id}: cross-group match ${homeCode}(${homeGroup}) vs ${awayCode}(${awayGroup})`,
