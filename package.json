@@ -54,7 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.28.0",
-    "fallow": "^2.91.0",
+    "fallow": "^3.34.0",
     "tailwindcss": "^4.1.8",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
